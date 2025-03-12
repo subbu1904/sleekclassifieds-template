@@ -5,8 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+interface Location {
+  address: string;
+  lat?: number;
+  lng?: number;
+}
+
 interface GeoLocationPickerProps {
-  onLocationSelect: (location: { address: string; lat?: number; lng?: number }) => void;
+  onLocationSelect: (location: Location) => void;
   initialAddress?: string;
 }
 
@@ -32,16 +38,16 @@ export const GeoLocationPicker = ({ onLocationSelect, initialAddress = "" }: Geo
         const lng = position.coords.longitude;
         setCoordinates({ lat, lng });
         
-        // For a real app, you would use a reverse geocoding service here
-        // like Google Maps API or another provider to get the address
-        // For now, we'll just use the coordinates as a placeholder
-        
         try {
           // Simulate address lookup
           setTimeout(() => {
             const simulatedAddress = `Location near ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
             setAddress(simulatedAddress);
-            onLocationSelect({ address: simulatedAddress, lat, lng });
+            onLocationSelect({ 
+              address: simulatedAddress, 
+              lat, 
+              lng 
+            });
             setIsLocating(false);
           }, 1000);
         } catch (error) {
@@ -58,7 +64,10 @@ export const GeoLocationPicker = ({ onLocationSelect, initialAddress = "" }: Geo
 
   const handleManualAddress = () => {
     if (address.trim()) {
-      onLocationSelect({ address });
+      onLocationSelect({ 
+        address,
+        ...coordinates // Include any coordinates if they exist
+      });
     }
   };
 

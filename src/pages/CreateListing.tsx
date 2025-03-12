@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Input } from "@/components/ui/input";
@@ -12,6 +11,12 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { ImagePlus, Trash2, FilmIcon } from "lucide-react";
 import { GeoLocationPicker } from "@/components/GeoLocationPicker";
+
+interface Location {
+  address: string;
+  lat?: number;
+  lng?: number;
+}
 
 const categories = [
   "Vehicles",
@@ -28,7 +33,7 @@ const CreateListing = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
-  const [location, setLocation] = useState({ address: "" });
+  const [location, setLocation] = useState<Location>({ address: "" });
   const navigate = useNavigate();
   
   // Check if user is logged in
@@ -82,7 +87,7 @@ const CreateListing = () => {
     setVideos(newVideos);
   };
   
-  const handleLocationSelect = (locationData: { address: string; lat?: number; lng?: number }) => {
+  const handleLocationSelect = (locationData: Location) => {
     setLocation(locationData);
   };
   
