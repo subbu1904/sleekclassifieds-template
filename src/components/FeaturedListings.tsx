@@ -2,6 +2,8 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin } from "lucide-react";
+import { FavoriteButton } from "@/components/FavoriteButton";
+import { useNavigate } from "react-router-dom";
 
 const listings = [
   {
@@ -39,19 +41,26 @@ const listings = [
 ];
 
 export const FeaturedListings = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="w-full py-8 bg-gray-50">
       <div className="max-w-7xl mx-auto px-6">
         <h2 className="text-2xl font-semibold mb-6">Featured Listings</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {listings.map((listing) => (
-            <Card key={listing.id} className="overflow-hidden card-hover">
-              <CardContent className="p-0">
+            <Card 
+              key={listing.id} 
+              className="overflow-hidden card-hover cursor-pointer"
+              onClick={() => navigate(`/listing/${listing.id}`)}
+            >
+              <CardContent className="p-0 relative">
                 <img
                   src={listing.image}
                   alt={listing.title}
                   className="w-full h-48 object-cover"
                 />
+                <FavoriteButton listingId={listing.id} />
                 <div className="p-4">
                   <Badge className="mb-2">{listing.category}</Badge>
                   <h3 className="font-semibold text-lg mb-2 line-clamp-2">
