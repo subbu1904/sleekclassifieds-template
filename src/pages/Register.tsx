@@ -7,10 +7,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
+import { useLanguage } from "@/providers/LanguageProvider";
 
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { t } = useLanguage();
   
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,34 +38,34 @@ const Register = () => {
       <main className="pt-24 max-w-md mx-auto px-4 sm:px-6 lg:px-8">
         <Card>
           <CardHeader>
-            <CardTitle>Create an account</CardTitle>
+            <CardTitle>{t('auth', 'createAccount')}</CardTitle>
             <CardDescription>
-              Join our marketplace to start buying and selling items
+              {t('auth', 'joinMarketplace')}
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="name">{t('auth', 'fullName')}</Label>
                 <Input id="name" name="name" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('auth', 'email')}</Label>
                 <Input id="email" name="email" type="email" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t('auth', 'password')}</Label>
                 <Input id="password" name="password" type="password" required />
               </div>
             </CardContent>
             <CardFooter className="flex flex-col space-y-2">
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating account..." : "Create account"}
+                {isLoading ? t('auth', 'creatingAccount') : t('auth', 'createAccount')}
               </Button>
               <div className="text-sm text-center mt-4">
-                Already have an account?{" "}
+                {t('auth', 'alreadyHaveAccount')}{" "}
                 <Link to="/login" className="text-primary underline">
-                  Login here
+                  {t('auth', 'loginHere')}
                 </Link>
               </div>
             </CardFooter>

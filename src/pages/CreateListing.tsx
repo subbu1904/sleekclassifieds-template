@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { ImagePlus, Trash2, FilmIcon } from "lucide-react";
 import { GeoLocationPicker } from "@/components/GeoLocationPicker";
+import { useLanguage } from "@/providers/LanguageProvider";
+import { detectLanguage } from "@/utils/translateContent";
 
 interface Location {
   address: string;
@@ -18,18 +20,8 @@ interface Location {
   lng?: number;
 }
 
-const categories = [
-  "Vehicles",
-  "Real Estate",
-  "Electronics",
-  "Fashion",
-  "Art",
-  "Books",
-  "Music",
-  "Photography",
-];
-
 const CreateListing = () => {
+  const { t, language } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
@@ -42,6 +34,17 @@ const CreateListing = () => {
     navigate("/login");
     toast.error("Please login to create a listing");
   }
+
+  const categories = [
+    t('categories', 'vehicles'),
+    t('categories', 'realEstate'),
+    t('categories', 'electronics'),
+    t('categories', 'fashion'),
+    t('categories', 'art'),
+    t('categories', 'books'),
+    t('categories', 'music'),
+    t('categories', 'photography'),
+  ];
   
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -96,13 +99,19 @@ const CreateListing = () => {
     setIsLoading(true);
     
     const formData = new FormData(e.currentTarget);
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    
+    // Detect the original language of the content
+    const contentLanguage = detectLanguage(title);
+    
     const listingData = {
       id: Date.now(), // Generate a unique ID
-      title: formData.get("title") as string,
+      title: title,
       category: formData.get("category") as string,
       price: formData.get("price") as string,
       condition: formData.get("condition") as string,
-      description: formData.get("description") as string,
+      description: description,
       location: location.address,
       coordinates: { 
         lat: location.lat,
@@ -112,6 +121,11 @@ const CreateListing = () => {
       videos: videos,
       createdBy: JSON.parse(user!).email,
       createdAt: new Date().toISOString(),
+      originalLanguage: contentLanguage, // Store the original language
+      // Store translations in a nested object for future use
+      translations: {
+        // We'll populate this when translations are requested
+      }
     };
     
     // Simulating saving to backend
@@ -122,7 +136,7 @@ const CreateListing = () => {
       localStorage.setItem("listings", JSON.stringify(listings));
       
       setIsLoading(false);
-      toast.success("Listing created successfully!");
+      toast.success(t('createListing', 'createListing'));
       navigate("/my-listings");
     }, 1000);
   };
@@ -133,29 +147,29 @@ const CreateListing = () => {
       <main className="pt-24 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <Card>
           <CardHeader>
-            <CardTitle>Create New Listing</CardTitle>
+            <CardTitle>{t('createListing', 'createNewListing')}</CardTitle>
             <CardDescription>
-              Fill out the form below to list your item for sale
+              {t('createListing', 'formDescription')}
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="title">Listing Title</Label>
+                <Label htmlFor="title">{t('createListing', 'listingTitle')}</Label>
                 <Input 
                   id="title" 
                   name="title" 
-                  placeholder="Enter a descriptive title" 
+                  placeholder={t('createListing', 'titlePlaceholder')} 
                   required 
                 />
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="category">Category</Label>
+                  <Label htmlFor="category">{t('listings', 'category')}</Label>
                   <Select name="category" required>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
+                      <SelectValue placeholder={t('createListing', 'selectCategory')} />
                     </SelectTrigger>
                     <SelectContent>
                       {categories.map((category) => (
@@ -168,7 +182,7 @@ const CreateListing = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="price">Price ($)</Label>
+                  <Label htmlFor="price">{t('listings', 'price')} ($)</Label>
                   <Input 
                     id="price" 
                     name="price" 
@@ -182,29 +196,29 @@ const CreateListing = () => {
               </div>
               
               <div className="space-y-2">
-                <Label>Item Condition</Label>
+                <Label>{t('createListing', 'itemCondition')}</Label>
                 <RadioGroup name="condition" defaultValue="used" className="flex space-x-4">
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="new" id="new" />
-                    <Label htmlFor="new">New</Label>
+                    <Label htmlFor="new">{t('createListing', 'new')}</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="like-new" id="like-new" />
-                    <Label htmlFor="like-new">Like New</Label>
+                    <Label htmlFor="like-new">{t('createListing', 'likeNew')}</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="used" id="used" />
-                    <Label htmlFor="used">Used</Label>
+                    <Label htmlFor="used">{t('createListing', 'used')}</Label>
                   </div>
                 </RadioGroup>
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">{t('listings', 'description')}</Label>
                 <Textarea 
                   id="description" 
                   name="description" 
-                  placeholder="Describe your item in detail" 
+                  placeholder={t('createListing', 'descriptionPlaceholder')} 
                   className="min-h-32" 
                   required 
                 />
@@ -216,7 +230,7 @@ const CreateListing = () => {
               />
               
               <div className="space-y-2">
-                <Label>Images</Label>
+                <Label>{t('listings', 'images')}</Label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                   {images.map((image, index) => (
                     <div key={index} className="relative rounded-lg overflow-hidden h-32">
@@ -248,11 +262,11 @@ const CreateListing = () => {
                     </Label>
                   </div>
                 </div>
-                <p className="text-xs text-gray-500">Upload up to 8 images. First image will be the cover.</p>
+                <p className="text-xs text-gray-500">{t('createListing', 'uploadImages')}</p>
               </div>
               
               <div className="space-y-2">
-                <Label>Videos</Label>
+                <Label>{t('listings', 'videos')}</Label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {videos.map((video, index) => (
                     <div key={index} className="relative rounded-lg overflow-hidden h-32 bg-gray-100">
@@ -284,15 +298,15 @@ const CreateListing = () => {
                     </Label>
                   </div>
                 </div>
-                <p className="text-xs text-gray-500">Upload up to 2 videos (max 30MB each)</p>
+                <p className="text-xs text-gray-500">{t('createListing', 'uploadVideos')}</p>
               </div>
             </CardContent>
             <CardFooter className="flex justify-end space-x-2">
               <Button type="button" variant="outline" onClick={() => navigate("/")}>
-                Cancel
+                {t('common', 'cancel')}
               </Button>
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Creating..." : "Create Listing"}
+                {isLoading ? t('createListing', 'creating') : t('createListing', 'createListing')}
               </Button>
             </CardFooter>
           </form>

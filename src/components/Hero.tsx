@@ -1,7 +1,10 @@
 
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/providers/LanguageProvider";
 
 export const Hero = () => {
+  const { t } = useLanguage();
+  
   return (
     <div className="relative h-[500px] flex items-center justify-center bg-gradient-to-r from-primary/5 to-primary/10">
       <div className="absolute inset-0 overflow-hidden">
@@ -10,13 +13,13 @@ export const Hero = () => {
       
       <div className="relative max-w-7xl mx-auto px-6 text-center">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in">
-          Find Exactly What You're Looking For
+          {t('hero', 'title')}
         </h1>
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto animate-fade-in">
-          Discover amazing deals on local items. Buy and sell with confidence in your community.
+          {t('hero', 'description')}
         </p>
         <Button size="lg" className="animate-float">
-          Start Browsing
+          {t('hero', 'cta')}
         </Button>
       </div>
     </div>

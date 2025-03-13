@@ -6,10 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin } from "lucide-react";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/providers/LanguageProvider";
 
 const Wishlist = () => {
   const { favorites } = useWishlist();
   const navigate = useNavigate();
+  const { t, language } = useLanguage();
   
   // Get listings from localStorage
   const allListings = JSON.parse(localStorage.getItem("listings") || "[]");
@@ -23,19 +25,19 @@ const Wishlist = () => {
     <div className="min-h-screen pb-12">
       <Navigation />
       <main className="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold mb-6">Your Wishlist</h1>
+        <h1 className="text-3xl font-bold mb-6">{t('wishlist', 'title')}</h1>
         
         {favoriteListings.length === 0 ? (
           <div className="text-center py-12">
-            <h2 className="text-2xl font-semibold mb-4">No saved listings yet</h2>
+            <h2 className="text-2xl font-semibold mb-4">{t('wishlist', 'noSavedListings')}</h2>
             <p className="text-gray-500 mb-6">
-              Start browsing and add items to your wishlist
+              {t('wishlist', 'startBrowsing')}
             </p>
             <button 
               onClick={() => navigate("/")}
               className="text-primary font-medium hover:underline"
             >
-              Explore listings
+              {t('wishlist', 'exploreListing')}
             </button>
           </div>
         ) : (

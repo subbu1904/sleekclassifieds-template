@@ -13,12 +13,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAdmin } from "@/providers/AdminProvider";
+import { useLanguage } from "@/providers/LanguageProvider";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 export const Navigation = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const { isAdmin } = useAdmin();
+  const { t } = useLanguage();
   
   useEffect(() => {
     const checkAuth = () => {
@@ -61,7 +64,7 @@ export const Navigation = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input 
               className="pl-10 w-full" 
-              placeholder="Search listings..."
+              placeholder={t('navigation', 'searchPlaceholder')}
               type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -70,6 +73,8 @@ export const Navigation = () => {
         </form>
 
         <div className="flex items-center space-x-2">
+          <LanguageSelector />
+          
           {isAdmin && (
             <Button 
               variant="outline"
@@ -77,7 +82,7 @@ export const Navigation = () => {
               className="flex items-center gap-2 bg-primary/10"
             >
               <Shield size={18} />
-              <span className="hidden sm:inline">Admin</span>
+              <span className="hidden sm:inline">{t('common', 'admin')}</span>
             </Button>
           )}
           
@@ -87,7 +92,7 @@ export const Navigation = () => {
             className="flex items-center gap-2"
           >
             <PlusCircle size={18} />
-            <span className="hidden sm:inline">Post Ad</span>
+            <span className="hidden sm:inline">{t('common', 'postAd')}</span>
           </Button>
           
           {isLoggedIn ? (
@@ -98,37 +103,37 @@ export const Navigation = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuLabel>{t('common', 'profile')}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => navigate("/profile")}>
-                  Profile
+                  {t('common', 'profile')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/my-listings")}>
-                  My Listings
+                  {t('common', 'myListings')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/wishlist")}>
-                  Wishlist
+                  {t('common', 'wishlist')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/messages")}>
-                  Messages
+                  {t('common', 'messages')}
                 </DropdownMenuItem>
                 {isAdmin && (
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => navigate("/admin")}>
-                      Admin Dashboard
+                      {t('common', 'admin')}
                     </DropdownMenuItem>
                   </>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
-                  Logout
+                  {t('common', 'logout')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <Button onClick={() => navigate("/login")}>
-              Sign In
+              {t('common', 'login')}
             </Button>
           )}
         </div>

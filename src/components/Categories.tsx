@@ -1,23 +1,26 @@
 
 import { Car, Home, Camera, Laptop, ShoppingBag, Brush, Book, Music } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const categories = [
-  { name: "Vehicles", icon: Car },
-  { name: "Real Estate", icon: Home },
-  { name: "Electronics", icon: Laptop },
-  { name: "Fashion", icon: ShoppingBag },
-  { name: "Art", icon: Brush },
-  { name: "Books", icon: Book },
-  { name: "Music", icon: Music },
-  { name: "Photography", icon: Camera },
-];
+import { useLanguage } from "@/providers/LanguageProvider";
 
 export const Categories = () => {
+  const { t } = useLanguage();
+
+  const categories = [
+    { name: t('categories', 'vehicles'), icon: Car },
+    { name: t('categories', 'realEstate'), icon: Home },
+    { name: t('categories', 'electronics'), icon: Laptop },
+    { name: t('categories', 'fashion'), icon: ShoppingBag },
+    { name: t('categories', 'art'), icon: Brush },
+    { name: t('categories', 'books'), icon: Book },
+    { name: t('categories', 'music'), icon: Music },
+    { name: t('categories', 'photography'), icon: Camera },
+  ];
+
   return (
     <div className="w-full py-8">
       <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-2xl font-semibold mb-6">Browse Categories</h2>
+        <h2 className="text-2xl font-semibold mb-6">{t('categories', 'browseCategories')}</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
           {categories.map((category) => (
             <a
