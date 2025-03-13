@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,9 +16,10 @@ import { useNavigate } from "react-router-dom";
 interface SearchFiltersProps {
   isExpanded: boolean;
   onToggleExpand: () => void;
+  onSearch?: (filters: any) => void;
 }
 
-export const SearchFilters = ({ isExpanded, onToggleExpand }: SearchFiltersProps) => {
+export const SearchFilters = ({ isExpanded, onToggleExpand, onSearch }: SearchFiltersProps) => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,6 +31,20 @@ export const SearchFilters = ({ isExpanded, onToggleExpand }: SearchFiltersProps
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const filters = {
+      searchQuery,
+      category,
+      priceRange,
+      location,
+      condition,
+      withImages
+    };
+    
+    if (onSearch) {
+      onSearch(filters);
+      return;
+    }
     
     const params = new URLSearchParams();
     if (searchQuery) params.append("q", searchQuery);

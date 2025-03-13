@@ -84,12 +84,14 @@ const SearchPage = () => {
   
   const handleSearch = (filters: any) => {
     const params = new URLSearchParams();
-    if (filters.keyword) params.append("q", filters.keyword);
-    if (filters.category) params.append("category", filters.category);
-    if (filters.minPrice > 0) params.append("minPrice", filters.minPrice.toString());
-    if (filters.maxPrice < 10000) params.append("maxPrice", filters.maxPrice.toString());
+    if (filters.searchQuery) params.append("q", filters.searchQuery);
+    if (filters.category !== "all") params.append("category", filters.category);
+    if (filters.priceRange[0] > 0 || filters.priceRange[1] < 1000) {
+      params.append("minPrice", filters.priceRange[0].toString());
+      params.append("maxPrice", filters.priceRange[1].toString());
+    }
     if (filters.location) params.append("location", filters.location);
-    if (filters.condition) params.append("condition", filters.condition);
+    if (filters.condition !== "any") params.append("condition", filters.condition);
     if (filters.withImages) params.append("withImages", "true");
     
     navigate(`/search?${params.toString()}`);
@@ -100,9 +102,9 @@ const SearchPage = () => {
       <Navigation />
       <main className="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SearchFilters 
-          onSearch={handleSearch}
           isExpanded={isFilterExpanded}
           onToggleExpand={() => setIsFilterExpanded(!isFilterExpanded)}
+          onSearch={handleSearch}
         />
         
         <div className="flex justify-between items-center mb-6">
