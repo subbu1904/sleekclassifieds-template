@@ -4,9 +4,10 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Listing } from "@/hooks/useListingsFilter";
 
 interface ListingCardProps {
-  listing: any;
+  listing: Listing;
 }
 
 export const ListingCard = ({ listing }: ListingCardProps) => {

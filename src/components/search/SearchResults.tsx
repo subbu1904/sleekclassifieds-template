@@ -2,9 +2,10 @@
 import { ListingCard } from "./ListingCard";
 import { ListingRow } from "./ListingRow";
 import { NoResults } from "./NoResults";
+import { Listing } from "@/hooks/useListingsFilter";
 
 interface SearchResultsProps {
-  listings: any[];
+  listings: Listing[];
   viewMode: "grid" | "list";
 }
 
