@@ -1,14 +1,10 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { SearchFilters } from "@/components/SearchFilters";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { MapPin, GridIcon, List } from "lucide-react";
-import { FavoriteButton } from "@/components/FavoriteButton";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SearchHeader } from "@/components/search/SearchHeader";
+import { SearchResults } from "@/components/search/SearchResults";
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
@@ -107,133 +103,19 @@ const SearchPage = () => {
           onSearch={handleSearch}
         />
         
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-xl font-semibold">
-            {filteredListings.length} {filteredListings.length === 1 ? 'Result' : 'Results'}
-            {keyword && <span> for "{keyword}"</span>}
-          </h1>
-          
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <Button 
-                variant={viewMode === "grid" ? "default" : "outline"} 
-                size="icon"
-                onClick={() => setViewMode("grid")}
-              >
-                <GridIcon className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant={viewMode === "list" ? "default" : "outline"} 
-                size="icon"
-                onClick={() => setViewMode("list")}
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
-            
-            <div className="w-40">
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="newest">Newest first</SelectItem>
-                  <SelectItem value="oldest">Oldest first</SelectItem>
-                  <SelectItem value="priceAsc">Price: Low to High</SelectItem>
-                  <SelectItem value="priceDesc">Price: High to Low</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
+        <SearchHeader 
+          resultCount={filteredListings.length}
+          keyword={keyword}
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
         
-        {sortedListings.length === 0 ? (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-semibold mb-4">No results found</h2>
-            <p className="text-gray-500 mb-6">
-              Try adjusting your search filters
-            </p>
-            <Button onClick={() => navigate("/")}>
-              Back to Home
-            </Button>
-          </div>
-        ) : viewMode === "grid" ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {sortedListings.map((listing: any) => (
-              <Card key={listing.id} className="overflow-hidden card-hover cursor-pointer" 
-                    onClick={() => navigate(`/listing/${listing.id}`)}>
-                <CardContent className="p-0 relative">
-                  {listing.images && listing.images[0] ? (
-                    <img
-                      src={listing.images[0]}
-                      alt={listing.title}
-                      className="w-full h-48 object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
-                      <p className="text-gray-500">No image</p>
-                    </div>
-                  )}
-                  <FavoriteButton listingId={listing.id} />
-                  <div className="p-4">
-                    <Badge className="mb-2">{listing.category}</Badge>
-                    <h3 className="font-semibold text-lg mb-2 line-clamp-2">
-                      {listing.title}
-                    </h3>
-                    <p className="text-2xl font-bold text-primary">${listing.price}</p>
-                  </div>
-                </CardContent>
-                <CardFooter className="p-4 pt-0">
-                  <div className="flex items-center text-gray-500 text-sm">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    {listing.location}
-                  </div>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {sortedListings.map((listing: any) => (
-              <Card key={listing.id} className="cursor-pointer overflow-hidden" 
-                    onClick={() => navigate(`/listing/${listing.id}`)}>
-                <div className="flex flex-col md:flex-row">
-                  <div className="w-full md:w-1/4 h-48 md:h-auto relative">
-                    {listing.images && listing.images[0] ? (
-                      <img
-                        src={listing.images[0]}
-                        alt={listing.title}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <p className="text-gray-500">No image</p>
-                      </div>
-                    )}
-                    <FavoriteButton listingId={listing.id} className="absolute top-2 right-2" />
-                  </div>
-                  <div className="p-4 flex-1">
-                    <div className="flex justify-between">
-                      <Badge className="mb-2">{listing.category}</Badge>
-                      <span className="text-gray-500 text-sm">
-                        {new Date(listing.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <h3 className="font-semibold text-xl mb-2">{listing.title}</h3>
-                    <p className="text-gray-600 mb-2 line-clamp-2">{listing.description}</p>
-                    <div className="flex justify-between items-center mt-4">
-                      <div className="flex items-center text-gray-500 text-sm">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        {listing.location}
-                      </div>
-                      <p className="text-2xl font-bold text-primary">${listing.price}</p>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        )}
+        <SearchResults 
+          listings={sortedListings} 
+          viewMode={viewMode} 
+        />
       </main>
     </div>
   );
