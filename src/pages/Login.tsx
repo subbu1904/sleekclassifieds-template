@@ -119,10 +119,9 @@ const Login = () => {
               </Link>
             </div>
           </CardContent>
-        </CardContent>
-      </Card>
-    </main>
-  </div>
+        </Card>
+      </main>
+    </div>
   );
 };
 
