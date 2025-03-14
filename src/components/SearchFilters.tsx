@@ -19,18 +19,18 @@ interface SearchFiltersProps {
   onSearch?: (filters: any) => void;
 }
 
-// Location options for the dropdown
+// Location options for the dropdown - Updated to Indian cities
 const LOCATIONS = [
   "All Locations",
-  "New York",
-  "Los Angeles",
-  "Chicago",
-  "Miami",
-  "Seattle",
-  "Boston",
-  "San Francisco",
-  "Dallas",
-  "Austin",
+  "Mumbai, Maharashtra",
+  "Delhi, NCR",
+  "Bengaluru, Karnataka",
+  "Chennai, Tamil Nadu",
+  "Kolkata, West Bengal",
+  "Hyderabad, Telangana",
+  "Pune, Maharashtra",
+  "Ahmedabad, Gujarat",
+  "Jaipur, Rajasthan",
 ];
 
 export const SearchFilters = ({ isExpanded, onToggleExpand, onSearch }: SearchFiltersProps) => {

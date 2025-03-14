@@ -39,21 +39,21 @@ export const GeoLocationPicker = ({ onLocationSelect, initialAddress = "" }: Geo
         setCoordinates({ lat, lng });
         
         try {
-          // Simulate address lookup - using Indian cities
+          // Get a random Indian city
+          const indianCities = [
+            "Mumbai, Maharashtra",
+            "Delhi, NCR",
+            "Bengaluru, Karnataka",
+            "Chennai, Tamil Nadu",
+            "Kolkata, West Bengal",
+            "Hyderabad, Telangana",
+            "Pune, Maharashtra",
+            "Ahmedabad, Gujarat",
+            "Jaipur, Rajasthan"
+          ];
+          const randomCity = indianCities[Math.floor(Math.random() * indianCities.length)];
+          
           setTimeout(() => {
-            // Random Indian cities for simulation
-            const indianCities = [
-              "Mumbai, Maharashtra",
-              "Delhi, NCR",
-              "Bengaluru, Karnataka",
-              "Chennai, Tamil Nadu",
-              "Kolkata, West Bengal",
-              "Hyderabad, Telangana",
-              "Pune, Maharashtra",
-              "Ahmedabad, Gujarat",
-              "Jaipur, Rajasthan"
-            ];
-            const randomCity = indianCities[Math.floor(Math.random() * indianCities.length)];
             setAddress(randomCity);
             onLocationSelect({ 
               address: randomCity, 

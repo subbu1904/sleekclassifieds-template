@@ -70,7 +70,7 @@ export const Navigation = () => {
             className="flex items-center gap-2"
           >
             <PlusCircle size={18} />
-            <span className="hidden sm:inline">{t('common', 'postAd')}</span>
+            <span className="inline">{t('common', 'postAd')}</span>
           </Button>
           
           {isLoggedIn ? (
