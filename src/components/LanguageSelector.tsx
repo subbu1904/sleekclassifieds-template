@@ -23,8 +23,9 @@ export const LanguageSelector = () => {
 
   const languageNames: Record<string, string> = {
     en: "English",
-    es: "Español",
-    fr: "Français",
+    hi: "हिन्दी",
+    bn: "বাংলা",
+    ta: "தமிழ்",
   };
 
   return (
