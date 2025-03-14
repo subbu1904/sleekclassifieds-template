@@ -14,8 +14,9 @@ export const FeaturedListings = () => {
     {
       id: 1,
       title: "Modern Laptop in Excellent Condition",
-      title_es: "Portátil Moderno en Excelente Estado",
-      title_fr: "Ordinateur Portable Moderne en Excellent État",
+      title_hi: "उत्कृष्ट स्थिति में आधुनिक लैपटॉप",
+      title_bn: "চমৎকার অবস্থায় আধুনিক ল্যাপটপ",
+      title_ta: "சிறந்த நிலையில் நவீன லேப்டாப்",
       price: "$899",
       location: "San Francisco, CA",
       image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&auto=format&fit=crop&q=60",
@@ -24,8 +25,9 @@ export const FeaturedListings = () => {
     {
       id: 2,
       title: "Professional Camera Kit",
-      title_es: "Kit de Cámara Profesional",
-      title_fr: "Kit Caméra Professionnel",
+      title_hi: "पेशेवर कैमरा किट",
+      title_bn: "পেশাদার ক্যামেরা কিট",
+      title_ta: "தொழில்முறை கேமரா கிட்",
       price: "$1,299",
       location: "Los Angeles, CA",
       image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop&q=60",
@@ -34,8 +36,9 @@ export const FeaturedListings = () => {
     {
       id: 3,
       title: "Vintage Book Collection",
-      title_es: "Colección de Libros Antiguos",
-      title_fr: "Collection de Livres Vintage",
+      title_hi: "विंटेज पुस्तक संग्रह",
+      title_bn: "পুরানো বই সংগ্রহ",
+      title_ta: "பழைய புத்தக சேகரிப்பு",
       price: "$299",
       location: "New York, NY",
       image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&auto=format&fit=crop&q=60",
@@ -44,8 +47,9 @@ export const FeaturedListings = () => {
     {
       id: 4,
       title: "Modern Office Desk",
-      title_es: "Escritorio de Oficina Moderno",
-      title_fr: "Bureau de Travail Moderne",
+      title_hi: "आधुनिक कार्यालय डेस्क",
+      title_bn: "আধুনিক অফিস ডেস্ক",
+      title_ta: "நவீன அலுவலக மேசை",
       price: "$449",
       location: "Chicago, IL",
       image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&auto=format&fit=crop&q=60",
@@ -55,8 +59,9 @@ export const FeaturedListings = () => {
 
   // Get translated title for each listing
   const getTranslatedTitle = (listing: any) => {
-    if (language === 'es' && listing.title_es) return listing.title_es;
-    if (language === 'fr' && listing.title_fr) return listing.title_fr;
+    if (language === 'hi' && listing.title_hi) return listing.title_hi;
+    if (language === 'bn' && listing.title_bn) return listing.title_bn;
+    if (language === 'ta' && listing.title_ta) return listing.title_ta;
     return listing.title;
   };
   
