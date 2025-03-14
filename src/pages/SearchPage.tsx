@@ -7,7 +7,7 @@ import { SearchResults } from "@/components/search/SearchResults";
 import { useListingsFilter } from "@/hooks/useListingsFilter";
 
 const SearchPage = () => {
-  const [isFilterExpanded, setIsFilterExpanded] = useState(true);
+  const [isFilterExpanded, setIsFilterExpanded] = useState(false);
   
   const {
     filters,
