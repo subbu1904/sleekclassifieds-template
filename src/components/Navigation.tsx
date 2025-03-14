@@ -14,12 +14,14 @@ import {
 import { useAdmin } from "@/providers/AdminProvider";
 import { useLanguage } from "@/providers/LanguageProvider";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const Navigation = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const { isAdmin } = useAdmin();
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   
   useEffect(() => {
     const checkAuth = () => {
@@ -46,7 +48,7 @@ export const Navigation = () => {
   return (
     <nav className="w-full px-6 py-4 glass fixed top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link to="/" className="text-2xl font-semibold text-primary">
+        <Link to="/" className={`font-semibold text-primary ${isMobile ? "text-lg" : "text-2xl"}`}>
           Classifieds
         </Link>
         
