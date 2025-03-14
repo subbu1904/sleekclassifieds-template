@@ -1,12 +1,14 @@
 
 import { en } from './en';
-import { es } from './es';
-import { fr } from './fr';
+import { hi } from './hi';
+import { bn } from './bn';
+import { ta } from './ta';
 
 export const translations = {
   en,
-  es,
-  fr
+  hi,
+  bn,
+  ta
 };
 
 export type SupportedLanguage = keyof typeof translations;

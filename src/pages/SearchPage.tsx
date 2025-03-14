@@ -5,6 +5,7 @@ import { SearchFilters } from "@/components/SearchFilters";
 import { SearchHeader } from "@/components/search/SearchHeader";
 import { SearchResults } from "@/components/search/SearchResults";
 import { useListingsFilter } from "@/hooks/useListingsFilter";
+import { Footer } from "@/components/Footer";
 
 const SearchPage = () => {
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
@@ -20,9 +21,9 @@ const SearchPage = () => {
   } = useListingsFilter();
   
   return (
-    <div className="min-h-screen pb-12">
+    <div className="min-h-screen flex flex-col">
       <Navigation />
-      <main className="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main className="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow">
         <SearchFilters 
           isExpanded={isFilterExpanded}
           onToggleExpand={() => setIsFilterExpanded(!isFilterExpanded)}
@@ -43,6 +44,7 @@ const SearchPage = () => {
           viewMode={viewMode} 
         />
       </main>
+      <Footer />
     </div>
   );
 };

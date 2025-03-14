@@ -1,4 +1,3 @@
-
 export const en = {
   common: {
     search: "Search",
@@ -14,6 +13,7 @@ export const en = {
     messages: "Messages",
     admin: "Admin",
     cancel: "Cancel",
+    contact: "Contact Us",
   },
   navigation: {
     home: "Home",
