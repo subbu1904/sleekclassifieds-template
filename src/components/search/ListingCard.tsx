@@ -31,7 +31,7 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
             <p className="text-gray-500">No image</p>
           </div>
         )}
-        <FavoriteButton listingId={listing.id} />
+        <FavoriteButton listingId={parseInt(listing.id)} />
         <div className="p-4">
           <Badge className="mb-2">{listing.category}</Badge>
           <h3 className="font-semibold text-lg mb-2 line-clamp-2">

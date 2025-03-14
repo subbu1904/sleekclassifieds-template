@@ -32,7 +32,7 @@ export const ListingRow = ({ listing }: ListingRowProps) => {
               <p className="text-gray-500">No image</p>
             </div>
           )}
-          <FavoriteButton listingId={listing.id} className="absolute top-2 right-2" />
+          <FavoriteButton listingId={parseInt(listing.id)} className="absolute top-2 right-2" />
         </div>
         <div className="p-4 flex-1">
           <div className="flex justify-between">
