@@ -12,31 +12,31 @@ interface ThemeContextType {
 
 const themes = [
   { 
-    id: "default", 
+    id: "default" as ThemeType, 
     name: "Default Theme", 
     description: "The standard look and feel", 
     primaryColor: "var(--primary)" 
   },
   { 
-    id: "dark", 
+    id: "dark" as ThemeType, 
     name: "Dark Mode", 
     description: "High contrast dark theme", 
     primaryColor: "#1e1e2e" 
   },
   { 
-    id: "light", 
+    id: "light" as ThemeType, 
     name: "Light Mode", 
     description: "Bright and clean interface", 
     primaryColor: "#f8fafc" 
   },
   { 
-    id: "colorful", 
+    id: "colorful" as ThemeType, 
     name: "Colorful", 
     description: "Vibrant and energetic", 
     primaryColor: "#6366f1" 
   },
   { 
-    id: "minimal", 
+    id: "minimal" as ThemeType, 
     name: "Minimal", 
     description: "Clean and minimalistic", 
     primaryColor: "#94a3b8" 
