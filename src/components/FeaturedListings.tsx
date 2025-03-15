@@ -1,14 +1,19 @@
-
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin } from "lucide-react";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/providers/LanguageProvider";
+import { useState } from "react";
+import { translateText } from "@/utils/translateContent";
+import { SocialShare } from "@/components/SocialShare";
+import { TranslationToggle } from "@/components/TranslationToggle";
 
 export const FeaturedListings = () => {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
+  const [autoTranslate, setAutoTranslate] = useState(false);
+  const [translatedListings, setTranslatedListings] = useState<any[]>([]);
   
   const listings = [
     {
@@ -57,8 +62,31 @@ export const FeaturedListings = () => {
     },
   ];
 
-  // Get translated title for each listing
-  const getTranslatedTitle = (listing: any) => {
+  const handleTranslationToggle = async (enabled: boolean) => {
+    setAutoTranslate(enabled);
+    
+    if (enabled && translatedListings.length === 0) {
+      const translated = await Promise.all(
+        listings.map(async (listing) => {
+          const translatedTitle = await translateText(listing.title, language);
+          return {
+            ...listing,
+            translatedTitle
+          };
+        })
+      );
+      setTranslatedListings(translated);
+    }
+  };
+
+  const getDisplayTitle = (listing: any) => {
+    if (autoTranslate && translatedListings.length > 0) {
+      const translatedListing = translatedListings.find(item => item.id === listing.id);
+      if (translatedListing?.translatedTitle) {
+        return translatedListing.translatedTitle;
+      }
+    }
+    
     if (language === 'hi' && listing.title_hi) return listing.title_hi;
     if (language === 'bn' && listing.title_bn) return listing.title_bn;
     if (language === 'ta' && listing.title_ta) return listing.title_ta;
@@ -68,30 +96,44 @@ export const FeaturedListings = () => {
   return (
     <div className="w-full py-8 bg-gray-50">
       <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-2xl font-semibold mb-6">{t('common', 'featuredListings')}</h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold">{t('common', 'featuredListings')}</h2>
+          <TranslationToggle 
+            onToggle={handleTranslationToggle} 
+            initialState={autoTranslate}
+          />
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {listings.map((listing) => (
             <Card 
               key={listing.id} 
-              className="overflow-hidden card-hover cursor-pointer"
-              onClick={() => navigate(`/listing/${listing.id}`)}
+              className="overflow-hidden card-hover cursor-pointer group"
             >
               <CardContent className="p-0 relative">
                 <img
                   src={listing.image}
-                  alt={getTranslatedTitle(listing)}
+                  alt={getDisplayTitle(listing)}
                   className="w-full h-48 object-cover"
+                  onClick={() => navigate(`/listing/${listing.id}`)}
                 />
-                <FavoriteButton listingId={listing.id} />
-                <div className="p-4">
+                <div className="absolute top-2 right-2 flex gap-2">
+                  <FavoriteButton listingId={listing.id} />
+                  <SocialShare 
+                    url={`${window.location.origin}/listing/${listing.id}`}
+                    title={getDisplayTitle(listing)}
+                    description={`Check out this ${listing.category}: ${getDisplayTitle(listing)}`}
+                  />
+                </div>
+                <div className="p-4" onClick={() => navigate(`/listing/${listing.id}`)}>
                   <Badge className="mb-2">{listing.category}</Badge>
                   <h3 className="font-semibold text-lg mb-2 line-clamp-2">
-                    {getTranslatedTitle(listing)}
+                    {getDisplayTitle(listing)}
                   </h3>
                   <p className="text-2xl font-bold text-primary">{listing.price}</p>
                 </div>
               </CardContent>
-              <CardFooter className="p-4 pt-0">
+              <CardFooter className="p-4 pt-0" onClick={() => navigate(`/listing/${listing.id}`)}>
                 <div className="flex items-center text-gray-500 text-sm">
                   <MapPin className="h-4 w-4 mr-1" />
                   {listing.location}

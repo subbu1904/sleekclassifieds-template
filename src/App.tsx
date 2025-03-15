@@ -1,5 +1,5 @@
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
 import Index from "@/pages/Index";
 import Login from "@/pages/Login";
@@ -13,13 +13,8 @@ import SearchPage from "@/pages/SearchPage";
 import AdminDashboard from "@/pages/AdminDashboard";
 import AdminLogin from "@/pages/AdminLogin";
 import Messages from "@/pages/Messages";
-import { AdminProvider } from "@/providers/AdminProvider";
-import { WishlistProvider } from "@/providers/WishlistProvider";
-import { FeaturesProvider } from "@/providers/FeaturesProvider";
-import { LanguageProvider } from "@/providers/LanguageProvider";
 import { PwaInstall } from "@/components/PwaInstall";
 import { OfflineManager } from "@/components/OfflineManager";
-import { AuthProvider } from "@/providers/AuthProvider";
 import { useState, useEffect } from "react";
 
 function App() {
@@ -55,35 +50,25 @@ function App() {
   }
 
   return (
-    <LanguageProvider>
-      <BrowserRouter>
-        <AuthProvider>
-          <AdminProvider>
-            <FeaturesProvider>
-              <WishlistProvider>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/create-listing" element={<CreateListing />} />
-                  <Route path="/wishlist" element={<Wishlist />} />
-                  <Route path="/my-listings" element={<MyListings />} />
-                  <Route path="/search" element={<SearchPage />} />
-                  <Route path="/messages" element={<Messages />} />
-                  <Route path="/admin" element={<AdminDashboard />} />
-                  <Route path="/admin-login" element={<AdminLogin />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-                <Toaster position="top-right" />
-                <PwaInstall />
-                <OfflineManager />
-              </WishlistProvider>
-            </FeaturesProvider>
-          </AdminProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </LanguageProvider>
+    <>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/create-listing" element={<CreateListing />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/my-listings" element={<MyListings />} />
+        <Route path="/search" element={<SearchPage />} />
+        <Route path="/messages" element={<Messages />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <Toaster position="top-right" />
+      <PwaInstall />
+      <OfflineManager />
+    </>
   );
 }
 

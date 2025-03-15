@@ -1,3 +1,4 @@
+
 export const en = {
   common: {
     search: "Search",
@@ -14,6 +15,7 @@ export const en = {
     admin: "Admin",
     cancel: "Cancel",
     contact: "Contact Us",
+    share: "Share",
   },
   navigation: {
     home: "Home",
@@ -144,5 +146,23 @@ export const en = {
     users: "User Management",
     statistics: "Statistics",
     settings: "Settings",
+  },
+  translation: {
+    autoTranslate: "Auto-Translate",
+    enabled: "Auto-translation enabled",
+    disabled: "Auto-translation disabled",
+    translatedFrom: "Translated from {language}",
+    viewOriginal: "View Original",
+    viewTranslated: "View Translated",
+  },
+  share: {
+    facebook: "Share on Facebook",
+    twitter: "Share on Twitter",
+    linkedin: "Share on LinkedIn",
+    whatsapp: "Share on WhatsApp",
+    email: "Share via Email",
+    copyLink: "Copy Link",
+    copied: "Copied!",
+    linkCopied: "Link copied to clipboard",
   },
 };
