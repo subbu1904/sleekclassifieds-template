@@ -5,6 +5,52 @@ import { toast } from "sonner";
 import { Mic, MicOff, Loader2 } from "lucide-react";
 import { useLanguage } from "@/providers/LanguageProvider";
 
+// Add missing TypeScript declarations for the Web Speech API
+interface SpeechRecognitionEvent extends Event {
+  results: SpeechRecognitionResultList;
+  resultIndex: number;
+  error: any;
+}
+
+interface SpeechRecognitionResultList {
+  readonly length: number;
+  item(index: number): SpeechRecognitionResult;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionResult {
+  readonly length: number;
+  item(index: number): SpeechRecognitionAlternative;
+  [index: number]: SpeechRecognitionAlternative;
+  isFinal: boolean;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onstart: (event: Event) => void;
+  onresult: (event: SpeechRecognitionEvent) => void;
+  onerror: (event: SpeechRecognitionEvent) => void;
+  onend: (event: Event) => void;
+  start(): void;
+  stop(): void;
+  abort(): void;
+}
+
+// Define the Window interface extension
+declare global {
+  interface Window {
+    SpeechRecognition?: new () => SpeechRecognition;
+    webkitSpeechRecognition?: new () => SpeechRecognition;
+  }
+}
+
 interface VoiceSearchProps {
   onSearchQuery: (query: string) => void;
 }
@@ -22,8 +68,14 @@ export const VoiceSearch = ({ onSearchQuery }: VoiceSearchProps) => {
     }
 
     try {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
+      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+      
+      if (!SpeechRecognitionAPI) {
+        toast.error(t('search', 'voiceSearchNotSupported'));
+        return;
+      }
+      
+      recognitionRef.current = new SpeechRecognitionAPI();
       
       recognitionRef.current.continuous = false;
       recognitionRef.current.interimResults = false;

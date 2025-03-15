@@ -1,15 +1,13 @@
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { SearchHeader } from "@/components/search/SearchHeader";
 import { SearchResults } from "@/components/search/SearchResults";
 import { SearchFilters } from "@/components/SearchFilters";
 import { useSearchParams } from "react-router-dom";
-import { useListingsFilter } from "@/hooks/useListingsFilter";
+import { useListingsFilter, Listing } from "@/hooks/useListingsFilter";
 import { FeatureToggle } from "@/components/FeatureToggle";
 import { useFeatures } from "@/providers/FeaturesProvider";
-import { Button } from "@/components/ui/button";
-import { Mic, MicOff, Loader2 } from "lucide-react";
 import { VoiceSearch } from "@/components/search/VoiceSearch";
 import { toast } from "sonner";
 
@@ -23,14 +21,18 @@ const SearchPage = () => {
   const maxPrice = searchParams.get("maxPrice") || "";
   const condition = searchParams.get("condition") || "";
   
-  const { listings, isLoading, count } = useListingsFilter({
-    searchTerm: query,
-    category: category,
-    minPrice: minPrice ? parseFloat(minPrice) : undefined,
-    maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
-    condition: condition || undefined,
-    sortBy: sort
-  });
+  // Initialize with default view mode
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  
+  const { 
+    sortedListings: listings, 
+    sortBy,
+    setSortBy
+  } = useListingsFilter();
+  
+  // Calculate count from listings array
+  const count = listings ? listings.length : 0;
+  const isLoading = false; // Set appropriate loading state if needed
   
   const handleSearch = (newQuery: string) => {
     const updatedParams = new URLSearchParams(searchParams);
@@ -49,9 +51,12 @@ const SearchPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2">
             <SearchHeader 
-              query={query} 
-              onSearch={handleSearch} 
               resultCount={count}
+              keyword={query}
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
             />
             
             <FeatureToggle feature="voiceSearch">
@@ -61,13 +66,16 @@ const SearchPage = () => {
           
           <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div className="lg:col-span-1">
-              <SearchFilters />
+              <SearchFilters 
+                isExpanded={true} 
+                onToggleExpand={() => {}} 
+              />
             </div>
             
             <div className="lg:col-span-3">
               <SearchResults 
                 listings={listings}
-                isLoading={isLoading}
+                viewMode={viewMode}
               />
             </div>
           </div>
