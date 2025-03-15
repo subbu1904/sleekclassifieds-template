@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { PlusCircle, User, Shield } from "lucide-react";
+import { PlusCircle, User, Shield, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -15,35 +15,14 @@ import { useAdmin } from "@/providers/AdminProvider";
 import { useLanguage } from "@/providers/LanguageProvider";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/providers/AuthProvider";
 
 export const Navigation = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const { isAdmin } = useAdmin();
   const { t } = useLanguage();
   const isMobile = useIsMobile();
-  
-  useEffect(() => {
-    const checkAuth = () => {
-      const user = localStorage.getItem("user");
-      setIsLoggedIn(!!user);
-    };
-    
-    checkAuth();
-    window.addEventListener("storage", checkAuth);
-    
-    return () => {
-      window.removeEventListener("storage", checkAuth);
-    };
-  }, []);
-  
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    setIsLoggedIn(false);
-    navigate("/");
-    // Dispatch event to inform other components
-    window.dispatchEvent(new Event("storage"));
-  };
+  const { user, signOut, isLoading } = useAuth();
   
   return (
     <nav className="w-full px-6 py-4 glass fixed top-0 z-50">
@@ -75,7 +54,11 @@ export const Navigation = () => {
             <span className="inline">{t('common', 'postAd')}</span>
           </Button>
           
-          {isLoggedIn ? (
+          {isLoading ? (
+            <Button variant="ghost" size="icon" disabled className="rounded-full">
+              <Loader2 size={20} className="animate-spin" />
+            </Button>
+          ) : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
@@ -106,7 +89,7 @@ export const Navigation = () => {
                   </>
                 )}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
+                <DropdownMenuItem onClick={() => signOut()}>
                   {t('common', 'logout')}
                 </DropdownMenuItem>
               </DropdownMenuContent>

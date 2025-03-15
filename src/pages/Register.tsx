@@ -5,80 +5,57 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "@/providers/LanguageProvider";
 import { Separator } from "@/components/ui/separator";
 import { Facebook } from "lucide-react";
 import { PwaInstall } from "@/components/PwaInstall";
+import { useAuth } from "@/providers/AuthProvider";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { signUp } = useAuth();
   
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     
     const formData = new FormData(e.currentTarget);
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     
-    // In a real implementation, this would call an API endpoint
     try {
-      // const response = await fetch('/api/register', {
-      //   method: 'POST',
-      //   body: JSON.stringify({ name, email, password }),
-      //   headers: { 'Content-Type': 'application/json' }
-      // });
-      
-      // Simulate registration success
-      setTimeout(() => {
-        setIsLoading(false);
-        localStorage.setItem("user", JSON.stringify({ name, email }));
-        toast.success("Account created successfully!");
-        navigate("/profile");
-      }, 1000);
+      await signUp(email, password, name);
     } catch (error) {
-      setIsLoading(false);
-      toast.error("Registration failed. Please try again.");
-      console.error("Registration error:", error);
+      console.error("Registration form error:", error);
     }
   };
   
-  const handleSocialLogin = (provider: string) => {
+  const handleSocialLogin = async (provider: "facebook" | "google") => {
     setIsLoading(true);
     
-    // This would be implemented with actual OAuth flow in production
     try {
-      // For Google, this would redirect to Google OAuth page
-      // For Facebook, this would redirect to Facebook OAuth page
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/profile`
+        }
+      });
       
-      // Example backend flow (not implemented here):
-      // 1. Frontend redirects to OAuth provider (Google/Facebook)
-      // 2. User authenticates with provider
-      // 3. Provider redirects back to your app with an auth code
-      // 4. Your app exchanges auth code for tokens with your backend
-      // 5. Backend verifies tokens and creates/updates user record
-      // 6. Backend returns session token to frontend
-      
-      // Simulate social registration
-      setTimeout(() => {
+      if (error) {
+        toast.error(`${provider} signup failed: ${error.message}`);
         setIsLoading(false);
-        const userData = provider === "Google" 
-          ? { name: "Google User", email: "user@gmail.com", provider: "google" }
-          : { name: "Facebook User", email: "user@facebook.com", provider: "facebook" };
-          
-        localStorage.setItem("user", JSON.stringify(userData));
-        toast.success(`Registered with ${provider} successfully!`);
-        navigate("/profile");
-      }, 1000);
-    } catch (error) {
+      }
+      
+      // The user will be redirected to the OAuth provider
+    } catch (error: any) {
       setIsLoading(false);
-      toast.error(`${provider} registration failed. Please try again.`);
-      console.error(`${provider} registration error:`, error);
+      toast.error(`${provider} signup failed. Please try again.`);
+      console.error(`${provider} signup error:`, error);
     }
   };
   
@@ -99,7 +76,7 @@ const Register = () => {
               <Button 
                 variant="outline" 
                 className="w-full" 
-                onClick={() => handleSocialLogin("Facebook")}
+                onClick={() => handleSocialLogin("facebook")}
                 disabled={isLoading}
               >
                 <Facebook className="mr-2 h-4 w-4" />
@@ -108,7 +85,7 @@ const Register = () => {
               <Button 
                 variant="outline" 
                 className="w-full" 
-                onClick={() => handleSocialLogin("Google")}
+                onClick={() => handleSocialLogin("google")}
                 disabled={isLoading}
               >
                 <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

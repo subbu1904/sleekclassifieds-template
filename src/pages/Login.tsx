@@ -5,79 +5,53 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { Facebook, Mail } from "lucide-react";
 import { useLanguage } from "@/providers/LanguageProvider";
 import { PwaInstall } from "@/components/PwaInstall";
+import { useAuth } from "@/providers/AuthProvider";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { signIn } = useAuth();
   
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
     
-    // Simulate login - would connect to backend in a real implementation
     try {
-      // This would be an API call to your backend
-      // const response = await fetch('/api/login', {
-      //   method: 'POST',
-      //   body: JSON.stringify({ email, password }),
-      //   headers: { 'Content-Type': 'application/json' }
-      // });
-      
-      // Mock successful response
-      setTimeout(() => {
-        setIsLoading(false);
-        localStorage.setItem("user", JSON.stringify({ 
-          name: "Demo User", 
-          email: email 
-        }));
-        toast.success("Logged in successfully!");
-        navigate("/profile");
-      }, 1000);
+      await signIn(email, password);
     } catch (error) {
-      setIsLoading(false);
-      toast.error("Login failed. Please try again.");
-      console.error("Login error:", error);
+      console.error("Login form error:", error);
     }
   };
 
-  const handleSocialLogin = (provider: string) => {
+  const handleSocialLogin = async (provider: "facebook" | "google") => {
     setIsLoading(true);
     
-    // This would be implemented with actual OAuth flow in production
     try {
-      // For Google, this would redirect to Google OAuth page
-      // For Facebook, this would redirect to Facebook OAuth page
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/profile`
+        }
+      });
       
-      // Example backend flow (not implemented here):
-      // 1. Frontend redirects to OAuth provider (Google/Facebook)
-      // 2. User authenticates with provider
-      // 3. Provider redirects back to your app with an auth code
-      // 4. Your app exchanges auth code for tokens with your backend
-      // 5. Backend verifies tokens and creates/updates user record
-      // 6. Backend returns session token to frontend
-      
-      // Simulate social login success
-      setTimeout(() => {
+      if (error) {
+        toast.error(`${provider} login failed: ${error.message}`);
         setIsLoading(false);
-        const userData = provider === "Google" 
-          ? { name: "Google User", email: "user@gmail.com", provider: "google" }
-          : { name: "Facebook User", email: "user@facebook.com", provider: "facebook" };
-          
-        localStorage.setItem("user", JSON.stringify(userData));
-        toast.success(`Logged in with ${provider} successfully!`);
-        navigate("/profile");
-      }, 1000);
-    } catch (error) {
+      }
+      
+      // The user will be redirected to the OAuth provider
+    } catch (error: any) {
       setIsLoading(false);
       toast.error(`${provider} login failed. Please try again.`);
       console.error(`${provider} login error:`, error);
@@ -101,7 +75,7 @@ const Login = () => {
               <Button 
                 variant="outline" 
                 className="w-full" 
-                onClick={() => handleSocialLogin("Facebook")}
+                onClick={() => handleSocialLogin("facebook")}
                 disabled={isLoading}
               >
                 <Facebook className="mr-2 h-4 w-4" />
@@ -110,7 +84,7 @@ const Login = () => {
               <Button 
                 variant="outline" 
                 className="w-full" 
-                onClick={() => handleSocialLogin("Google")}
+                onClick={() => handleSocialLogin("google")}
                 disabled={isLoading}
               >
                 <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

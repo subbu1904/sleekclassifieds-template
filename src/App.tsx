@@ -17,33 +17,36 @@ import { WishlistProvider } from "@/providers/WishlistProvider";
 import { FeaturesProvider } from "@/providers/FeaturesProvider";
 import { LanguageProvider } from "@/providers/LanguageProvider";
 import { PwaInstall } from "@/components/PwaInstall";
+import { AuthProvider } from "@/providers/AuthProvider";
 
 function App() {
   return (
     <LanguageProvider>
-      <AdminProvider>
-        <FeaturesProvider>
-          <WishlistProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/create-listing" element={<CreateListing />} />
-                <Route path="/wishlist" element={<Wishlist />} />
-                <Route path="/my-listings" element={<MyListings />} />
-                <Route path="/search" element={<SearchPage />} />
-                <Route path="/admin" element={<AdminDashboard />} />
-                <Route path="/admin-login" element={<AdminLogin />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <Toaster position="top-right" />
-              <PwaInstall />
-            </BrowserRouter>
-          </WishlistProvider>
-        </FeaturesProvider>
-      </AdminProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <AdminProvider>
+            <FeaturesProvider>
+              <WishlistProvider>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/create-listing" element={<CreateListing />} />
+                  <Route path="/wishlist" element={<Wishlist />} />
+                  <Route path="/my-listings" element={<MyListings />} />
+                  <Route path="/search" element={<SearchPage />} />
+                  <Route path="/admin" element={<AdminDashboard />} />
+                  <Route path="/admin-login" element={<AdminLogin />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+                <Toaster position="top-right" />
+                <PwaInstall />
+              </WishlistProvider>
+            </FeaturesProvider>
+          </AdminProvider>
+        </AuthProvider>
+      </BrowserRouter>
     </LanguageProvider>
   );
 }
