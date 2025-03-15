@@ -11,6 +11,8 @@ export interface FeatureToggles {
   chat: boolean;
   analytics: boolean;
   verification: boolean;
+  premiumListings: boolean;
+  offlineMode: boolean;
 }
 
 interface FeaturesContextType {
@@ -29,6 +31,8 @@ const defaultFeatures: FeatureToggles = {
   chat: false,
   analytics: false,
   verification: false,
+  premiumListings: true,
+  offlineMode: true,
 };
 
 const FeaturesContext = createContext<FeaturesContextType | undefined>(undefined);

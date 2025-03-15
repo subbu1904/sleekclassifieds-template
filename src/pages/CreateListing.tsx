@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Input } from "@/components/ui/input";
@@ -9,10 +10,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { ImagePlus, Trash2, FilmIcon } from "lucide-react";
+import { ImagePlus, Trash2, FilmIcon, Sparkles } from "lucide-react";
 import { GeoLocationPicker } from "@/components/GeoLocationPicker";
 import { useLanguage } from "@/providers/LanguageProvider";
 import { detectLanguage } from "@/utils/translateContent";
+import { FeatureToggle } from "@/components/FeatureToggle";
+import { PremiumListingFeatures } from "@/components/PremiumListingFeatures";
 
 interface Location {
   address: string;
@@ -26,6 +29,8 @@ const CreateListing = () => {
   const [images, setImages] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
   const [location, setLocation] = useState<Location>({ address: "" });
+  const [isPremium, setIsPremium] = useState(false);
+  const [premiumPlan, setPremiumPlan] = useState<string | undefined>();
   const navigate = useNavigate();
   
   // Check if user is logged in
@@ -94,6 +99,11 @@ const CreateListing = () => {
     setLocation(locationData);
   };
   
+  const handlePremiumStatusChange = (isPremium: boolean, plan?: string) => {
+    setIsPremium(isPremium);
+    setPremiumPlan(plan);
+  };
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -122,11 +132,28 @@ const CreateListing = () => {
       createdBy: JSON.parse(user!).email,
       createdAt: new Date().toISOString(),
       originalLanguage: contentLanguage, // Store the original language
+      isPremium: isPremium,
+      premiumPlan: premiumPlan,
+      // Track offline editing
+      offlineCreated: !navigator.onLine,
       // Store translations in a nested object for future use
       translations: {
         // We'll populate this when translations are requested
       }
     };
+    
+    // Handle offline creation
+    if (!navigator.onLine) {
+      // Store in localStorage until back online
+      const offlineListings = JSON.parse(localStorage.getItem("offlineListings") || "[]");
+      offlineListings.push(listingData);
+      localStorage.setItem("offlineListings", JSON.stringify(offlineListings));
+      
+      setIsLoading(false);
+      toast.success(t('createListing', 'createListing') + " (Saved offline)");
+      navigate("/my-listings");
+      return;
+    }
     
     // Simulating saving to backend
     setTimeout(() => {
@@ -147,10 +174,20 @@ const CreateListing = () => {
       <main className="pt-24 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <Card>
           <CardHeader>
-            <CardTitle>{t('createListing', 'createNewListing')}</CardTitle>
-            <CardDescription>
-              {t('createListing', 'formDescription')}
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>{t('createListing', 'createNewListing')}</CardTitle>
+                <CardDescription>
+                  {t('createListing', 'formDescription')}
+                </CardDescription>
+              </div>
+              {isPremium && (
+                <Badge className="bg-amber-500 flex items-center gap-1 px-2 py-1">
+                  <Sparkles className="h-3 w-3" />
+                  Premium
+                </Badge>
+              )}
+            </div>
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-6">
@@ -300,6 +337,16 @@ const CreateListing = () => {
                 </div>
                 <p className="text-xs text-gray-500">{t('createListing', 'uploadVideos')}</p>
               </div>
+              
+              <FeatureToggle feature="premiumListings">
+                <div className="pt-4 mt-4 border-t">
+                  <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-amber-500" />
+                    {t('premiumListing', 'upgradeToFeatured')}
+                  </h3>
+                  <PremiumListingFeatures onPremiumStatusChange={handlePremiumStatusChange} />
+                </div>
+              </FeatureToggle>
             </CardContent>
             <CardFooter className="flex justify-end space-x-2">
               <Button type="button" variant="outline" onClick={() => navigate("/")}>

@@ -18,9 +18,42 @@ import { WishlistProvider } from "@/providers/WishlistProvider";
 import { FeaturesProvider } from "@/providers/FeaturesProvider";
 import { LanguageProvider } from "@/providers/LanguageProvider";
 import { PwaInstall } from "@/components/PwaInstall";
+import { OfflineManager } from "@/components/OfflineManager";
 import { AuthProvider } from "@/providers/AuthProvider";
+import { useState, useEffect } from "react";
 
 function App() {
+  const [isAppReady, setIsAppReady] = useState(false);
+
+  // Simulate app initialization and offline data loading
+  useEffect(() => {
+    // Initialize cache for offline use
+    const initAppCache = () => {
+      // In a real app, we would preload important assets and data here
+      // For now, we'll just simulate with a timeout
+      const timeout = setTimeout(() => {
+        setIsAppReady(true);
+      }, 500);
+
+      return () => clearTimeout(timeout);
+    };
+
+    initAppCache();
+  }, []);
+
+  // Display loading screen during initialization
+  if (!isAppReady) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <h2 className="text-xl font-medium">Loading application...</h2>
+          <p className="text-muted-foreground">Preparing your experience</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <LanguageProvider>
       <BrowserRouter>
@@ -44,6 +77,7 @@ function App() {
                 </Routes>
                 <Toaster position="top-right" />
                 <PwaInstall />
+                <OfflineManager />
               </WishlistProvider>
             </FeaturesProvider>
           </AdminProvider>

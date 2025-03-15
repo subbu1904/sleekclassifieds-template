@@ -10,8 +10,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useFeatures, FeatureToggles } from "@/providers/FeaturesProvider";
 import { useAdmin } from "@/providers/AdminProvider";
-import { Shield, ToggleRight, Users, Database, LineChart, BellRing, MessageSquare, MapPin, Heart, FileVideo, Search, CheckCircle } from "lucide-react";
+import { Shield, ToggleRight, Users, Database, LineChart, BellRing, MessageSquare, MapPin, Heart, FileVideo, Search, CheckCircle, CreditCard, WifiOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { Analytics } from "@/components/admin/Analytics";
+import { UserManagement } from "@/components/admin/UserManagement";
+import { Separator } from "@/components/ui/separator";
 
 const AdminDashboard = () => {
   const { isAdmin } = useAdmin();
@@ -20,6 +23,7 @@ const AdminDashboard = () => {
   const [userCount, setUserCount] = useState(0);
   const [listingCount, setListingCount] = useState(0);
   const [messageCount, setMessageCount] = useState(0);
+  const [revenueTotal, setRevenueTotal] = useState(0);
   
   useEffect(() => {
     if (!isAdmin) {
@@ -48,9 +52,13 @@ const AdminDashboard = () => {
           
         if (messageCountError) throw messageCountError;
         
+        // Mock revenue data
+        const estimatedRevenue = (listingsCount * 0.2) * 9.99;
+        
         setUserCount(userCountResult || 0);
         setListingCount(listingsCount);
         setMessageCount(messageCountResult || 0);
+        setRevenueTotal(Math.round(estimatedRevenue * 100) / 100);
       } catch (error) {
         console.error("Error fetching stats:", error);
       }
@@ -68,6 +76,8 @@ const AdminDashboard = () => {
     chat: <MessageSquare className="h-4 w-4" />,
     analytics: <LineChart className="h-4 w-4" />,
     verification: <CheckCircle className="h-4 w-4" />,
+    premiumListings: <CreditCard className="h-4 w-4" />,
+    offlineMode: <WifiOff className="h-4 w-4" />,
   };
   
   const featureLabels: Record<keyof FeatureToggles, string> = {
@@ -79,12 +89,14 @@ const AdminDashboard = () => {
     chat: "Chat/Messaging System",
     analytics: "Analytics",
     verification: "User Verification",
+    premiumListings: "Premium Listings",
+    offlineMode: "Offline Mode",
   };
   
   return (
     <div className="min-h-screen bg-muted/20">
       <Navigation />
-      <main className="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main className="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <Shield className="h-6 w-6 text-primary" />
@@ -123,13 +135,11 @@ const AdminDashboard = () => {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Features Enabled</CardTitle>
-              <ToggleRight className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Revenue</CardTitle>
+              <CreditCard className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {Object.values(features).filter(Boolean).length}/{Object.values(features).length}
-              </div>
+              <div className="text-2xl font-bold">${revenueTotal.toLocaleString()}</div>
             </CardContent>
           </Card>
         </div>
@@ -139,6 +149,7 @@ const AdminDashboard = () => {
           <TabsList>
             <TabsTrigger value="features">Feature Toggles</TabsTrigger>
             <TabsTrigger value="users">User Management</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="messages">Messages</TabsTrigger>
             <TabsTrigger value="content">Content Moderation</TabsTrigger>
           </TabsList>
@@ -188,17 +199,11 @@ const AdminDashboard = () => {
           </TabsContent>
           
           <TabsContent value="users">
-            <Card>
-              <CardHeader>
-                <CardTitle>User Management</CardTitle>
-                <CardDescription>
-                  This feature will be implemented in the future
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="h-[400px] flex items-center justify-center">
-                <p className="text-muted-foreground">User management features coming soon</p>
-              </CardContent>
-            </Card>
+            <UserManagement />
+          </TabsContent>
+          
+          <TabsContent value="analytics">
+            <Analytics />
           </TabsContent>
           
           <TabsContent value="messages">
