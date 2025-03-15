@@ -16,6 +16,7 @@ import { AdminProvider } from "@/providers/AdminProvider";
 import { WishlistProvider } from "@/providers/WishlistProvider";
 import { FeaturesProvider } from "@/providers/FeaturesProvider";
 import { LanguageProvider } from "@/providers/LanguageProvider";
+import { PwaInstall } from "@/components/PwaInstall";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <Toaster position="top-right" />
+              <PwaInstall />
             </BrowserRouter>
           </WishlistProvider>
         </FeaturesProvider>
