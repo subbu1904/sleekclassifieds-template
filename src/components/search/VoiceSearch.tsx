@@ -5,11 +5,47 @@ import { toast } from "sonner";
 import { Mic, MicOff, Loader2 } from "lucide-react";
 import { useLanguage } from "@/providers/LanguageProvider";
 
+// Define the SpeechRecognition interface
+interface SpeechRecognitionEvent extends Event {
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionResultList {
+  readonly length: number;
+  item(index: number): SpeechRecognitionResult;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionResult {
+  readonly length: number;
+  item(index: number): SpeechRecognitionAlternative;
+  [index: number]: SpeechRecognitionAlternative;
+  isFinal?: boolean;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start(): void;
+  stop(): void;
+  abort(): void;
+  onerror: (event: any) => void;
+  onend: () => void;
+  onresult: (event: SpeechRecognitionEvent) => void;
+  onstart: () => void;
+}
+
 // Define window interface with SpeechRecognition
 declare global {
   interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
+    SpeechRecognition: new () => SpeechRecognition;
+    webkitSpeechRecognition: new () => SpeechRecognition;
   }
 }
 
@@ -21,7 +57,7 @@ export const VoiceSearch = ({ onSearchQuery }: VoiceSearchProps) => {
   const { t } = useLanguage();
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   const startListening = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -47,7 +83,7 @@ export const VoiceSearch = ({ onSearchQuery }: VoiceSearchProps) => {
         setIsListening(true);
       };
       
-      recognitionRef.current.onresult = (event: any) => {
+      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
         setIsProcessing(true);
         const transcript = event.results[0][0].transcript;
         
