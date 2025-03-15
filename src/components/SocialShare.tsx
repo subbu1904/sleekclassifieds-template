@@ -5,7 +5,7 @@ import {
   Linkedin, 
   Mail, 
   Copy, 
-  WhatsApp,
+  MessageSquare,
   Share2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -57,7 +57,7 @@ export const SocialShare = ({
     },
     {
       name: "WhatsApp",
-      icon: WhatsApp,
+      icon: MessageSquare, // Changed from WhatsApp to MessageSquare
       url: `https://api.whatsapp.com/send?text=${encodedTitle} ${encodedUrl}`,
       color: "bg-[#25D366] hover:bg-[#25D366]/90"
     },
