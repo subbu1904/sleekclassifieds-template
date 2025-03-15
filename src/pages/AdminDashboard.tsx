@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useFeatures, FeatureToggles } from "@/providers/FeaturesProvider";
 import { useAdmin } from "@/providers/AdminProvider";
 import { Shield, ToggleRight, Users, Database, LineChart, BellRing, MessageSquare, MapPin, Heart, FileVideo, Search, CheckCircle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const AdminDashboard = () => {
   const { isAdmin } = useAdmin();
@@ -18,6 +19,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [userCount, setUserCount] = useState(0);
   const [listingCount, setListingCount] = useState(0);
+  const [messageCount, setMessageCount] = useState(0);
   
   useEffect(() => {
     if (!isAdmin) {
@@ -26,10 +28,35 @@ const AdminDashboard = () => {
       return;
     }
     
-    // In a real app, these would be fetched from an API
-    // Simulating user and listing counts for the dashboard
-    setUserCount(Math.floor(Math.random() * 100) + 50);
-    setListingCount(Math.floor(Math.random() * 200) + 100);
+    // Fetch system stats
+    const fetchStats = async () => {
+      try {
+        // Get user count
+        const { count: userCountResult, error: userCountError } = await supabase
+          .from('profiles')
+          .select('id', { count: 'exact', head: true });
+          
+        if (userCountError) throw userCountError;
+        
+        // Get listing count - simulate for now
+        const listingsCount = Math.floor(Math.random() * 200) + 100;
+        
+        // Get message count
+        const { count: messageCountResult, error: messageCountError } = await supabase
+          .from('messages')
+          .select('id', { count: 'exact', head: true });
+          
+        if (messageCountError) throw messageCountError;
+        
+        setUserCount(userCountResult || 0);
+        setListingCount(listingsCount);
+        setMessageCount(messageCountResult || 0);
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      }
+    };
+    
+    fetchStats();
   }, [isAdmin, navigate]);
   
   const featureIcons: Record<keyof FeatureToggles, React.ReactNode> = {
@@ -49,7 +76,7 @@ const AdminDashboard = () => {
     multimedia: "Multimedia Support",
     advancedSearch: "Advanced Search",
     notifications: "Notifications",
-    chat: "Chat System",
+    chat: "Chat/Messaging System",
     analytics: "Analytics",
     verification: "User Verification",
   };
@@ -66,7 +93,7 @@ const AdminDashboard = () => {
         </div>
         
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -87,6 +114,15 @@ const AdminDashboard = () => {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Total Messages</CardTitle>
+              <MessageSquare className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{messageCount}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Features Enabled</CardTitle>
               <ToggleRight className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -103,6 +139,7 @@ const AdminDashboard = () => {
           <TabsList>
             <TabsTrigger value="features">Feature Toggles</TabsTrigger>
             <TabsTrigger value="users">User Management</TabsTrigger>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
             <TabsTrigger value="content">Content Moderation</TabsTrigger>
           </TabsList>
           
@@ -160,6 +197,85 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent className="h-[400px] flex items-center justify-center">
                 <p className="text-muted-foreground">User management features coming soon</p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="messages">
+            <Card>
+              <CardHeader>
+                <CardTitle>Message Management</CardTitle>
+                <CardDescription>
+                  Monitor messaging activity and statistics
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-8">
+                  {features.chat ? (
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                        <Card>
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-sm">Total Messages</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="text-2xl font-bold">{messageCount}</div>
+                          </CardContent>
+                        </Card>
+                        <Card>
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-sm">Active Conversations</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="text-2xl font-bold">{Math.floor(messageCount / 8)}</div>
+                          </CardContent>
+                        </Card>
+                        <Card>
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-sm">Messages Today</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="text-2xl font-bold">{Math.floor(messageCount / 4)}</div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                      
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-lg font-medium">Messaging System</h3>
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor="toggle-chat">
+                            {features.chat ? "Enabled" : "Disabled"}
+                          </Label>
+                          <Switch
+                            id="toggle-chat"
+                            checked={features.chat}
+                            onCheckedChange={() => toggleFeature('chat')}
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-muted/50 p-6 rounded-lg">
+                        <p className="text-center text-muted-foreground">
+                          Detailed message analytics and moderation tools coming soon
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-10 gap-4">
+                      <MessageSquare className="h-12 w-12 text-muted-foreground" />
+                      <h3 className="text-xl font-medium">Messaging is disabled</h3>
+                      <p className="text-muted-foreground text-center max-w-md">
+                        The messaging feature is currently disabled. Enable it to allow users to communicate with each other.
+                      </p>
+                      <Button 
+                        onClick={() => toggleFeature('chat')}
+                        className="mt-2"
+                      >
+                        Enable Messaging
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

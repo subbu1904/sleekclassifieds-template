@@ -12,6 +12,7 @@ import MyListings from "@/pages/MyListings";
 import SearchPage from "@/pages/SearchPage";
 import AdminDashboard from "@/pages/AdminDashboard";
 import AdminLogin from "@/pages/AdminLogin";
+import Messages from "@/pages/Messages";
 import { AdminProvider } from "@/providers/AdminProvider";
 import { WishlistProvider } from "@/providers/WishlistProvider";
 import { FeaturesProvider } from "@/providers/FeaturesProvider";
@@ -36,6 +37,7 @@ function App() {
                   <Route path="/wishlist" element={<Wishlist />} />
                   <Route path="/my-listings" element={<MyListings />} />
                   <Route path="/search" element={<SearchPage />} />
+                  <Route path="/messages" element={<Messages />} />
                   <Route path="/admin" element={<AdminDashboard />} />
                   <Route path="/admin-login" element={<AdminLogin />} />
                   <Route path="*" element={<NotFound />} />

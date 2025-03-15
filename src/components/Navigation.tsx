@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { PlusCircle, User, Shield, Loader2 } from "lucide-react";
+import { PlusCircle, User, Shield, Loader2, MessageSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -16,6 +16,8 @@ import { useLanguage } from "@/providers/LanguageProvider";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/providers/AuthProvider";
+import { useFeatures } from "@/providers/FeaturesProvider";
+import { FeatureToggle } from "@/components/FeatureToggle";
 
 export const Navigation = () => {
   const navigate = useNavigate();
@@ -23,6 +25,7 @@ export const Navigation = () => {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
   const { user, signOut, isLoading } = useAuth();
+  const { features } = useFeatures();
   
   return (
     <nav className="w-full px-6 py-4 glass fixed top-0 z-50">
@@ -53,6 +56,19 @@ export const Navigation = () => {
             <PlusCircle size={18} />
             <span className="inline">{t('common', 'postAd')}</span>
           </Button>
+          
+          <FeatureToggle feature="chat">
+            {user && (
+              <Button 
+                variant="outline"
+                onClick={() => navigate("/messages")}
+                className="flex items-center gap-2"
+              >
+                <MessageSquare size={18} />
+                <span className="hidden sm:inline">{t('common', 'messages')}</span>
+              </Button>
+            )}
+          </FeatureToggle>
           
           {isLoading ? (
             <Button variant="ghost" size="icon" disabled className="rounded-full">
