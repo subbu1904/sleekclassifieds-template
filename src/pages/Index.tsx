@@ -4,6 +4,7 @@ import { Hero } from "@/components/Hero";
 import { Categories } from "@/components/Categories";
 import { FeaturedListings } from "@/components/FeaturedListings";
 import { Footer } from "@/components/Footer";
+import { PwaInstall } from "@/components/PwaInstall";
 
 const Index = () => {
   return (
@@ -13,6 +14,7 @@ const Index = () => {
         <Hero />
         <Categories />
         <FeaturedListings />
+        <PwaInstall />
       </main>
       <Footer />
     </div>
