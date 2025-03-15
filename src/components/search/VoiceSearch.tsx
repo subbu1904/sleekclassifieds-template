@@ -5,49 +5,11 @@ import { toast } from "sonner";
 import { Mic, MicOff, Loader2 } from "lucide-react";
 import { useLanguage } from "@/providers/LanguageProvider";
 
-// Add missing TypeScript declarations for the Web Speech API
-interface SpeechRecognitionEvent extends Event {
-  results: SpeechRecognitionResultList;
-  resultIndex: number;
-  error: any;
-}
-
-interface SpeechRecognitionResultList {
-  readonly length: number;
-  item(index: number): SpeechRecognitionResult;
-  [index: number]: SpeechRecognitionResult;
-}
-
-interface SpeechRecognitionResult {
-  readonly length: number;
-  item(index: number): SpeechRecognitionAlternative;
-  [index: number]: SpeechRecognitionAlternative;
-  isFinal: boolean;
-}
-
-interface SpeechRecognitionAlternative {
-  transcript: string;
-  confidence: number;
-}
-
-interface SpeechRecognition extends EventTarget {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  onstart: (event: Event) => void;
-  onresult: (event: SpeechRecognitionEvent) => void;
-  onerror: (event: SpeechRecognitionEvent) => void;
-  onend: (event: Event) => void;
-  start(): void;
-  stop(): void;
-  abort(): void;
-}
-
-// Define the Window interface extension
+// Define window interface with SpeechRecognition
 declare global {
   interface Window {
-    SpeechRecognition?: new () => SpeechRecognition;
-    webkitSpeechRecognition?: new () => SpeechRecognition;
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
   }
 }
 
@@ -59,7 +21,7 @@ export const VoiceSearch = ({ onSearchQuery }: VoiceSearchProps) => {
   const { t } = useLanguage();
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any>(null);
 
   const startListening = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -85,7 +47,7 @@ export const VoiceSearch = ({ onSearchQuery }: VoiceSearchProps) => {
         setIsListening(true);
       };
       
-      recognitionRef.current.onresult = (event) => {
+      recognitionRef.current.onresult = (event: any) => {
         setIsProcessing(true);
         const transcript = event.results[0][0].transcript;
         
@@ -98,7 +60,7 @@ export const VoiceSearch = ({ onSearchQuery }: VoiceSearchProps) => {
         }, 500);
       };
       
-      recognitionRef.current.onerror = (event) => {
+      recognitionRef.current.onerror = (event: any) => {
         console.error('Speech recognition error', event.error);
         setIsListening(false);
         setIsProcessing(false);

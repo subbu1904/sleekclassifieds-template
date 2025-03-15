@@ -10,8 +10,11 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { useLanguage } from "@/providers/LanguageProvider";
-import { Search } from "lucide-react";
+import { Search, Mic } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { VoiceSearch } from "@/components/search/VoiceSearch";
+import { useFeatures } from "@/providers/FeaturesProvider";
+import { FeatureToggle } from "@/components/FeatureToggle";
 
 interface SearchFiltersProps {
   isExpanded: boolean;
@@ -35,6 +38,7 @@ const LOCATIONS = [
 
 export const SearchFilters = ({ isExpanded, onToggleExpand, onSearch }: SearchFiltersProps) => {
   const { t } = useLanguage();
+  const { features } = useFeatures();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState("all");
@@ -56,6 +60,29 @@ export const SearchFilters = ({ isExpanded, onToggleExpand, onSearch }: SearchFi
     
     const params = new URLSearchParams();
     if (searchQuery) params.append("q", searchQuery);
+    if (category !== "all") params.append("category", category);
+    if (location !== "All Locations") params.append("location", location);
+    
+    navigate(`/search?${params.toString()}`);
+  };
+
+  const handleVoiceSearchQuery = (query: string) => {
+    setSearchQuery(query);
+    
+    // Automatically submit the search form after voice input
+    const filters = {
+      searchQuery: query,
+      category,
+      location: location === "All Locations" ? "" : location
+    };
+    
+    if (onSearch) {
+      onSearch(filters);
+      return;
+    }
+    
+    const params = new URLSearchParams();
+    if (query) params.append("q", query);
     if (category !== "all") params.append("category", category);
     if (location !== "All Locations") params.append("location", location);
     
@@ -109,9 +136,15 @@ export const SearchFilters = ({ isExpanded, onToggleExpand, onSearch }: SearchFi
               </Select>
             </div>
             
-            <Button type="submit" className="w-full md:w-auto">
-              {t('search', 'search')}
-            </Button>
+            <div className="flex gap-2">
+              <Button type="submit" className="w-full md:w-auto">
+                {t('search', 'search')}
+              </Button>
+              
+              <FeatureToggle feature="voiceSearch">
+                <VoiceSearch onSearchQuery={handleVoiceSearchQuery} />
+              </FeatureToggle>
+            </div>
           </div>
         </form>
       </div>

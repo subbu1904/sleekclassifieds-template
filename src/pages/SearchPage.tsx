@@ -5,11 +5,9 @@ import { SearchHeader } from "@/components/search/SearchHeader";
 import { SearchResults } from "@/components/search/SearchResults";
 import { SearchFilters } from "@/components/SearchFilters";
 import { useSearchParams } from "react-router-dom";
-import { useListingsFilter, Listing } from "@/hooks/useListingsFilter";
+import { useListingsFilter } from "@/hooks/useListingsFilter";
 import { FeatureToggle } from "@/components/FeatureToggle";
 import { useFeatures } from "@/providers/FeaturesProvider";
-import { VoiceSearch } from "@/components/search/VoiceSearch";
-import { toast } from "sonner";
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -25,23 +23,19 @@ const SearchPage = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   
   const { 
-    sortedListings: listings, 
+    sortedListings, 
     sortBy,
     setSortBy
   } = useListingsFilter();
   
   // Calculate count from listings array
-  const count = listings ? listings.length : 0;
+  const count = sortedListings ? sortedListings.length : 0;
   const isLoading = false; // Set appropriate loading state if needed
   
   const handleSearch = (newQuery: string) => {
     const updatedParams = new URLSearchParams(searchParams);
     updatedParams.set("q", newQuery);
     setSearchParams(updatedParams);
-  };
-  
-  const handleVoiceSearchQuery = (query: string) => {
-    handleSearch(query);
   };
   
   return (
@@ -58,10 +52,6 @@ const SearchPage = () => {
               sortBy={sortBy}
               setSortBy={setSortBy}
             />
-            
-            <FeatureToggle feature="voiceSearch">
-              <VoiceSearch onSearchQuery={handleVoiceSearchQuery} />
-            </FeatureToggle>
           </div>
           
           <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -74,7 +64,7 @@ const SearchPage = () => {
             
             <div className="lg:col-span-3">
               <SearchResults 
-                listings={listings}
+                listings={sortedListings}
                 viewMode={viewMode}
               />
             </div>
