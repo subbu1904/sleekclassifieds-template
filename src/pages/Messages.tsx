@@ -143,6 +143,7 @@ const Messages = () => {
           </div>
         </FeatureToggle>
         
+        {/* Fix: The second FeatureToggle needs children */}
         <FeatureToggle 
           feature="chat" 
           fallback={
@@ -153,7 +154,10 @@ const Messages = () => {
               </CardDescription>
             </Card>
           }
-        />
+        >
+          {/* Empty div as children to fulfill the interface requirement */}
+          <div style={{ display: 'none' }}></div>
+        </FeatureToggle>
       </main>
     </div>
   );
