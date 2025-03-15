@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +9,7 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { useLanguage } from "@/providers/LanguageProvider";
-import { Search, Mic } from "lucide-react";
+import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { VoiceSearch } from "@/components/search/VoiceSearch";
 import { useFeatures } from "@/providers/FeaturesProvider";

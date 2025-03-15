@@ -10,12 +10,16 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useFeatures, FeatureToggles } from "@/providers/FeaturesProvider";
 import { useAdmin } from "@/providers/AdminProvider";
-import { Shield, ToggleRight, Users, Database, LineChart, BellRing, MessageSquare, MapPin, Heart, FileVideo, Search, CheckCircle, CreditCard, WifiOff, FolderCog, Calendar, Shield as ShieldIcon, AlertTriangle, MicIcon } from "lucide-react";
+import { Shield, ToggleRight, Users, Database, LineChart, BellRing, MessageSquare, MapPin, Heart, FileVideo, Search, CheckCircle, CreditCard, WifiOff, FolderCog, Calendar, Shield as ShieldIcon, AlertTriangle, MicIcon, Share2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Analytics } from "@/components/admin/Analytics";
 import { UserManagement } from "@/components/admin/UserManagement";
 import { CategoryManagement } from "@/components/admin/CategoryManagement";
 import { Separator } from "@/components/ui/separator";
+import { ThemeSelector } from "@/components/admin/ThemeSelector";
+import { CurrencySelector } from "@/components/admin/CurrencySelector";
+import { AffiliateProgram } from "@/components/admin/AffiliateProgram";
+import { SubscriptionPlans } from "@/components/admin/SubscriptionPlans";
 
 const AdminDashboard = () => {
   const { isAdmin } = useAdmin();
@@ -150,8 +154,12 @@ const AdminDashboard = () => {
         </div>
         
         <Tabs defaultValue="features" className="space-y-4">
-          <TabsList>
+          <TabsList className="flex flex-wrap">
             <TabsTrigger value="features">Feature Toggles</TabsTrigger>
+            <TabsTrigger value="themes">Themes</TabsTrigger>
+            <TabsTrigger value="currency">Currency</TabsTrigger>
+            <TabsTrigger value="affiliates">Affiliates</TabsTrigger>
+            <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
             <TabsTrigger value="users">User Management</TabsTrigger>
             <TabsTrigger value="categories">Category Management</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
@@ -201,6 +209,22 @@ const AdminDashboard = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+          
+          <TabsContent value="themes" className="space-y-4">
+            <ThemeSelector />
+          </TabsContent>
+          
+          <TabsContent value="currency" className="space-y-4">
+            <CurrencySelector />
+          </TabsContent>
+          
+          <TabsContent value="affiliates" className="space-y-4">
+            <AffiliateProgram />
+          </TabsContent>
+          
+          <TabsContent value="subscriptions" className="space-y-4">
+            <SubscriptionPlans />
           </TabsContent>
           
           <TabsContent value="users">
