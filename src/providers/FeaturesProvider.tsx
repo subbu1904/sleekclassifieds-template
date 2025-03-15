@@ -13,6 +13,11 @@ export interface FeatureToggles {
   verification: boolean;
   premiumListings: boolean;
   offlineMode: boolean;
+  categoryManagement: boolean;
+  listingExpiry: boolean;
+  contentFiltering: boolean;
+  rateLimiting: boolean;
+  voiceSearch: boolean;
 }
 
 interface FeaturesContextType {
@@ -33,6 +38,11 @@ const defaultFeatures: FeatureToggles = {
   verification: false,
   premiumListings: true,
   offlineMode: true,
+  categoryManagement: true,
+  listingExpiry: true,
+  contentFiltering: true,
+  rateLimiting: true,
+  voiceSearch: true,
 };
 
 const FeaturesContext = createContext<FeaturesContextType | undefined>(undefined);

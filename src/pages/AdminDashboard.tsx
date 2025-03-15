@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,14 +5,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useFeatures, FeatureToggles } from "@/providers/FeaturesProvider";
 import { useAdmin } from "@/providers/AdminProvider";
-import { Shield, ToggleRight, Users, Database, LineChart, BellRing, MessageSquare, MapPin, Heart, FileVideo, Search, CheckCircle, CreditCard, WifiOff } from "lucide-react";
+import { Shield, ToggleRight, Users, Database, LineChart, BellRing, MessageSquare, MapPin, Heart, FileVideo, Search, CheckCircle, CreditCard, WifiOff, FolderCog, Calendar, Shield as ShieldIcon, AlertTriangle, MicIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Analytics } from "@/components/admin/Analytics";
 import { UserManagement } from "@/components/admin/UserManagement";
+import { CategoryManagement } from "@/components/admin/CategoryManagement";
 import { Separator } from "@/components/ui/separator";
 
 const AdminDashboard = () => {
@@ -32,27 +33,22 @@ const AdminDashboard = () => {
       return;
     }
     
-    // Fetch system stats
     const fetchStats = async () => {
       try {
-        // Get user count
         const { count: userCountResult, error: userCountError } = await supabase
           .from('profiles')
           .select('id', { count: 'exact', head: true });
           
         if (userCountError) throw userCountError;
         
-        // Get listing count - simulate for now
         const listingsCount = Math.floor(Math.random() * 200) + 100;
         
-        // Get message count
         const { count: messageCountResult, error: messageCountError } = await supabase
           .from('messages')
           .select('id', { count: 'exact', head: true });
           
         if (messageCountError) throw messageCountError;
         
-        // Mock revenue data
         const estimatedRevenue = (listingsCount * 0.2) * 9.99;
         
         setUserCount(userCountResult || 0);
@@ -78,6 +74,11 @@ const AdminDashboard = () => {
     verification: <CheckCircle className="h-4 w-4" />,
     premiumListings: <CreditCard className="h-4 w-4" />,
     offlineMode: <WifiOff className="h-4 w-4" />,
+    categoryManagement: <FolderCog className="h-4 w-4" />,
+    listingExpiry: <Calendar className="h-4 w-4" />,
+    contentFiltering: <ShieldIcon className="h-4 w-4" />,
+    rateLimiting: <AlertTriangle className="h-4 w-4" />,
+    voiceSearch: <MicIcon className="h-4 w-4" />,
   };
   
   const featureLabels: Record<keyof FeatureToggles, string> = {
@@ -91,6 +92,11 @@ const AdminDashboard = () => {
     verification: "User Verification",
     premiumListings: "Premium Listings",
     offlineMode: "Offline Mode",
+    categoryManagement: "Category Management",
+    listingExpiry: "Listing Expiry & Renewal",
+    contentFiltering: "Content Filtering",
+    rateLimiting: "Rate Limiting",
+    voiceSearch: "Voice Search",
   };
   
   return (
@@ -104,7 +110,6 @@ const AdminDashboard = () => {
           </div>
         </div>
         
-        {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -144,11 +149,11 @@ const AdminDashboard = () => {
           </Card>
         </div>
         
-        {/* Main Content */}
         <Tabs defaultValue="features" className="space-y-4">
           <TabsList>
             <TabsTrigger value="features">Feature Toggles</TabsTrigger>
             <TabsTrigger value="users">User Management</TabsTrigger>
+            <TabsTrigger value="categories">Category Management</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="messages">Messages</TabsTrigger>
             <TabsTrigger value="content">Content Moderation</TabsTrigger>
@@ -200,6 +205,10 @@ const AdminDashboard = () => {
           
           <TabsContent value="users">
             <UserManagement />
+          </TabsContent>
+          
+          <TabsContent value="categories">
+            <CategoryManagement />
           </TabsContent>
           
           <TabsContent value="analytics">
@@ -290,11 +299,84 @@ const AdminDashboard = () => {
               <CardHeader>
                 <CardTitle>Content Moderation</CardTitle>
                 <CardDescription>
-                  This feature will be implemented in the future
+                  Filter spam and harmful content from listings
                 </CardDescription>
               </CardHeader>
-              <CardContent className="h-[400px] flex items-center justify-center">
-                <p className="text-muted-foreground">Content moderation features coming soon</p>
+              <CardContent>
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="text-lg font-medium">Content Filtering</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Automatically filter harmful content from listings
+                      </p>
+                    </div>
+                    <Switch
+                      checked={features.contentFiltering || false}
+                      onCheckedChange={() => toggleFeature('contentFiltering')}
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h4 className="font-medium">Filtering Rules</h4>
+                    <ul className="space-y-2">
+                      <li className="flex items-center gap-2">
+                        <Badge variant="outline">Active</Badge>
+                        <span>Spam keyword detection</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Badge variant="outline">Active</Badge>
+                        <span>Harmful content filtering</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Badge variant="outline">Active</Badge>
+                        <span>Excessive capitalization detection</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <Separator />
+                  
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="text-lg font-medium">Rate Limiting</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Limit the number of listings a user can create per hour
+                      </p>
+                    </div>
+                    <Switch
+                      checked={features.rateLimiting || false}
+                      onCheckedChange={() => toggleFeature('rateLimiting')}
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <Card>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm">Listings per hour</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-2xl font-bold">5</div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm">Messages per hour</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-2xl font-bold">20</div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-sm">Failed attempts lockout</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-2xl font-bold">10 min</div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

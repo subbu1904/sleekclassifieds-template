@@ -17,9 +17,13 @@ interface FormHandlerReturn {
   location: Location;
   isPremium: boolean;
   premiumPlan: string | undefined;
+  expiryDate: Date | null;
+  autoRenew: boolean;
   setImages: (images: string[]) => void;
   setVideos: (videos: string[]) => void;
   setLocation: (location: Location) => void;
+  setExpiryDate: (date: Date | null) => void;
+  setAutoRenew: (autoRenew: boolean) => void;
   handlePremiumStatusChange: (isPremium: boolean, plan?: string) => void;
   handleLocationSelect: (locationData: Location) => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -32,6 +36,11 @@ export const useListingFormHandler = (): FormHandlerReturn => {
   const [location, setLocation] = useState<Location>({ address: "" });
   const [isPremium, setIsPremium] = useState(false);
   const [premiumPlan, setPremiumPlan] = useState<string | undefined>();
+  const [expiryDate, setExpiryDate] = useState<Date | null>(
+    // Default to 30 days from now
+    new Date(new Date().setDate(new Date().getDate() + 30))
+  );
+  const [autoRenew, setAutoRenew] = useState(false);
   const navigate = useNavigate();
   
   // Check if user is logged in
@@ -80,6 +89,8 @@ export const useListingFormHandler = (): FormHandlerReturn => {
       originalLanguage: contentLanguage, // Store the original language
       isPremium: isPremium,
       premiumPlan: premiumPlan,
+      expiryDate: expiryDate ? expiryDate.toISOString() : null,
+      autoRenew: autoRenew,
       // Track offline editing
       offlineCreated: !navigator.onLine,
       // Store translations in a nested object for future use
@@ -121,9 +132,13 @@ export const useListingFormHandler = (): FormHandlerReturn => {
     location,
     isPremium,
     premiumPlan,
+    expiryDate,
+    autoRenew,
     setImages,
     setVideos,
     setLocation,
+    setExpiryDate,
+    setAutoRenew,
     handlePremiumStatusChange,
     handleLocationSelect,
     handleSubmit
