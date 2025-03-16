@@ -9,6 +9,7 @@
   "description": "A description for your application",
   "lang": "en",
   "dir": "ltr",
+  "id": "/?homescreen=1",
   "theme_color": "#000000",
   "background_color": "#000000",
   "orientation": "portrait",
