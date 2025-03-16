@@ -22,8 +22,8 @@ export const en = {
     searchPlaceholder: "Search listings...",
   },
   hero: {
-    title: "Find Exactly What You're Looking For",
-    description: "Discover amazing deals on local items. Buy and sell with confidence in your community.",
+    title: "Find Karegar/Karkhana,Cutting Masters,JOB Work & More!",
+    description: "You can also sell/buy machines, find Technicians,everything of the garment industry",
     cta: "Start Browsing",
   },
   categories: {
