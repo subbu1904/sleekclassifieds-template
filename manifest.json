@@ -1,12 +1,12 @@
 {
   "name": "The name of your application",
-  "short_name": "This name will show in your Windows taskbar, in the start menu, and Android homescreen",
-  "start_url": "The URL that should be loaded when your application is opened",
+  "short_name": "KKC",
+  "start_url": "https://kapdakaregar.com",
   "display": "standalone",
   "launch_handler": {
     "client_mode": ["navigate-existing", "auto"]
   },
-  "description": "A description for your application",
+  "description": "Find Karegar,Karkhandar,JobWork,Master,Technicians",
   "lang": "en",
   "dir": "ltr",
   "id": "/?homescreen=1",
