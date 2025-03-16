@@ -9,6 +9,9 @@
   "theme_color": "#30733a",
   "background_color": "#bb7070",
   "orientation": "portrait",
+  "lang": "en"
+
+  
   "icons": [
     {
       "src": "https://www.pwabuilder.com/assets/icons/icon_512.png",
