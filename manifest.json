@@ -47,4 +47,9 @@
   "categories": [
     "productivity"
   ]
+
+   "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+}
+
 }
