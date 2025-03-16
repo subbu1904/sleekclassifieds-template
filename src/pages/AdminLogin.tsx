@@ -23,7 +23,7 @@ const AdminLogin = () => {
     
     // For demo purposes, hardcoded admin credentials
     // In a real app, this would be authenticated against a backend
-    if (username === "admin" && password === "admin123") {
+    if (username === "subbu" && password === "oknow") {
       setTimeout(() => {
         setAdmin(true);
         toast.success("Logged in as administrator!");
