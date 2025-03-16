@@ -14,14 +14,16 @@ export const es = {
     messages: "Mensajes",
     admin: "Administrador",
     cancel: "Cancelar",
+    contact: "Contáctenos",
+    share: "Compartir",
   },
   navigation: {
     home: "Inicio",
     searchPlaceholder: "Buscar anuncios...",
   },
   hero: {
-    title: "Encuentra Exactamente Lo Que Buscas",
-    description: "Descubre ofertas increíbles en artículos locales. Compra y vende con confianza en tu comunidad.",
+    title: "¡Encuentra Karegar/Karkhana, Maestros de Corte, Trabajo y Más!",
+    description: "También puedes vender/comprar máquinas, encontrar técnicos, todo lo relacionado con la industria de la confección",
     cta: "Comenzar a Navegar",
   },
   categories: {
