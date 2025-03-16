@@ -77,10 +77,10 @@ export const BasicDetailsForm = ({ categories }: BasicDetailsFormProps) => {
         
         {selectedCategory && filteredSubcategories.length > 0 && (
           <div className="space-y-2">
-            <Label htmlFor="subcategory">Subcategory</Label>
+            <Label htmlFor="subcategory">{t('listings', 'subcategory')}</Label>
             <Select name="subcategory">
               <SelectTrigger>
-                <SelectValue placeholder="Select a subcategory" />
+                <SelectValue placeholder={t('listings', 'selectSubcategory')} />
               </SelectTrigger>
               <SelectContent>
                 {filteredSubcategories.map((subcategory) => (
