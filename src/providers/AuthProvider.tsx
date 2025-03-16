@@ -42,6 +42,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
         refreshProfile();
+        // If user is newly authenticated, show a welcome message
+        if (!user) {
+          toast.success("Welcome! You are now logged in.");
+          navigate("/profile");
+        }
       } else {
         setProfile(null);
       }
@@ -49,7 +54,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate, user]);
 
   const refreshProfile = async () => {
     if (!user) return;

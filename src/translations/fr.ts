@@ -1,3 +1,4 @@
+
 export const fr = {
   common: {
     search: "Rechercher",
@@ -188,7 +189,7 @@ export const fr = {
     categoryAlreadyExists: "La catégorie existe déjà",
   },
   translation: {
-    autoTranslate: "Auto-Traduction",
+    autoTranslate: "Traduction Automatique",
     enabled: "Traduction automatique activée",
     disabled: "Traduction automatique désactivée",
     translatedFrom: "Traduit de {language}",

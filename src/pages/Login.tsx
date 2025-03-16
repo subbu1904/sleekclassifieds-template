@@ -41,16 +41,23 @@ const Login = () => {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/profile`
+          redirectTo: `${window.location.origin}/profile`,
+          queryParams: provider === 'google' ? {
+            access_type: 'offline',
+            prompt: 'consent',
+          } : undefined
         }
       });
       
       if (error) {
         toast.error(`${provider} login failed: ${error.message}`);
+        console.error(`${provider} login error:`, error);
         setIsLoading(false);
+        return;
       }
       
       // The user will be redirected to the OAuth provider
+      toast.success(`Redirecting to ${provider}...`);
     } catch (error: any) {
       setIsLoading(false);
       toast.error(`${provider} login failed. Please try again.`);
