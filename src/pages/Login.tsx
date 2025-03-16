@@ -14,6 +14,10 @@ import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+// Facebook App ID and Google Client ID
+const FACEBOOK_APP_ID = "1689268768465466";
+const GOOGLE_CLIENT_ID = "434135595914-81sq2m8l21b1rithvait8jdr4a25qvit.apps.googleusercontent.com";
+
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
