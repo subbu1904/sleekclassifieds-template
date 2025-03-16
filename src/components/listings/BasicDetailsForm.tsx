@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -6,13 +7,40 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useLanguage } from "@/providers/LanguageProvider";
 
+interface Subcategory {
+  id: string;
+  name: string;
+  parent_id: string;
+}
+
 interface BasicDetailsFormProps {
   categories: string[];
 }
 
 export const BasicDetailsForm = ({ categories }: BasicDetailsFormProps) => {
   const { t } = useLanguage();
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+  const [filteredSubcategories, setFilteredSubcategories] = useState<Subcategory[]>([]);
   
+  useEffect(() => {
+    // Load subcategories from localStorage
+    const storedSubcategories = localStorage.getItem("subcategories");
+    if (storedSubcategories) {
+      setSubcategories(JSON.parse(storedSubcategories));
+    }
+  }, []);
+  
+  useEffect(() => {
+    // Filter subcategories based on selected category
+    if (selectedCategory) {
+      const filtered = subcategories.filter(sub => sub.parent_id === selectedCategory);
+      setFilteredSubcategories(filtered);
+    } else {
+      setFilteredSubcategories([]);
+    }
+  }, [selectedCategory, subcategories]);
+
   return (
     <>
       <div className="space-y-2">
@@ -28,7 +56,12 @@ export const BasicDetailsForm = ({ categories }: BasicDetailsFormProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="category">{t('listings', 'category')}</Label>
-          <Select name="category" required>
+          <Select 
+            name="category" 
+            required 
+            value={selectedCategory} 
+            onValueChange={setSelectedCategory}
+          >
             <SelectTrigger>
               <SelectValue placeholder={t('createListing', 'selectCategory')} />
             </SelectTrigger>
@@ -41,6 +74,24 @@ export const BasicDetailsForm = ({ categories }: BasicDetailsFormProps) => {
             </SelectContent>
           </Select>
         </div>
+        
+        {selectedCategory && filteredSubcategories.length > 0 && (
+          <div className="space-y-2">
+            <Label htmlFor="subcategory">Subcategory</Label>
+            <Select name="subcategory">
+              <SelectTrigger>
+                <SelectValue placeholder="Select a subcategory" />
+              </SelectTrigger>
+              <SelectContent>
+                {filteredSubcategories.map((subcategory) => (
+                  <SelectItem key={subcategory.id} value={subcategory.id}>
+                    {subcategory.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         
         <div className="space-y-2">
           <Label htmlFor="price">{t('listings', 'price')} ($)</Label>
