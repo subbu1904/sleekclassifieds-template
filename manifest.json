@@ -1,18 +1,14 @@
 {
-  "name": "KapdaKaregar",
-  "short_name": "KapdaKaregar",
+  "name": "The name of your application",
+  "short_name": "This name will show in your Windows taskbar, in the start menu, and Android homescreen",
   "start_url": "The URL that should be loaded when your application is opened",
   "display": "standalone",
-  "description": "find &amp; meet Karegar,Kharkhandar,Job Work, Master,Technician.",
+  "description": "A description for your application",
   "lang": "en",
-  "dir": "auto",
-  "theme_color": "#30733a",
-  "background_color": "#bb7070",
+  "dir": "ltr",
+  "theme_color": "#000000",
+  "background_color": "#000000",
   "orientation": "portrait",
-  "lang": "en"
-  "scope": "https://kapdakaregar.com"
-
-  
   "icons": [
     {
       "src": "https://www.pwabuilder.com/assets/icons/icon_512.png",
@@ -35,21 +31,28 @@
       "description": "A screenshot of the home page"
     }
   ],
+  "related_applications": [
+    {
+      "platform": "windows",
+      "url": " The URL to your app in that app store"
+    }
+  ],
   "prefer_related_applications": false,
   "shortcuts": [
     {
-      "name": "KapdaKaregar",
+      "name": "The name you would like to be displayed for your shortcut",
       "url": "The url you would like to open when the user chooses this shortcut. This must be a URL local to your PWA. For example: If my start_url is /, this URL must be something like /shortcut",
       "description": "A description of the functionality of this shortcut"
     }
   ],
-  "id": "KKC",
+  "display_override": [
+    "window-controls-overlay"
+  ],
+  "scope": "https://kapdakaregar.com",
   "categories": [
     "productivity"
-  ]
-
-   "launch_handler": {
-    "client_mode": ["navigate-existing", "auto"]
-}
-
+  ],
+  "edge_side_panel": {
+    "preferred_width": 9
+  }
 }
