@@ -1,4 +1,3 @@
-
 export const hi = {
   common: {
     search: "खोज",
@@ -58,6 +57,19 @@ export const hi = {
     oldest: "सबसे पुराना पहले",
     priceLowHigh: "कीमत: कम से अधिक",
     priceHighLow: "कीमत: अधिक से कम",
+    expirySettings: "समाप्ति सेटिंग्स",
+    expiryDate: "समाप्ति तिथि",
+    expiryDescription: "आपका विज्ञापन इस तिथि पर स्वचालित रूप से समाप्त हो जाएगा, जब तक कि नवीनीकृत न किया जाए।",
+    autoRenew: "स्वतः नवीनीकरण",
+    autoRenewDescription: "समाप्त होने पर इस विज्ञापन को स्वचालित रूप से नवीनीकृत करें।",
+    selectDate: "एक तिथि चुनें",
+    contentFilterActive: "सामग्री फ़िल्टर सक्रिय है",
+    enabled: "सक्षम",
+    titleFiltered: "शीर्षक में अनुचित सामग्री है",
+    descriptionFiltered: "विवरण में अनुचित सामग्री है",
+    rateLimitExceeded: "आप इस समय अधिकतम विज्ञापनों की संख्या तक पहुंच गए हैं。",
+    tryAgainIn: "में फिर से प्रयास करें",
+    minutes: "मिनट",
   },
   createListing: {
     createNewListing: "नया विज्ञापन बनाएं",
