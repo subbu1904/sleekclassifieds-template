@@ -42,6 +42,7 @@ const Login = () => {
     setIsLoading(true);
     
     try {
+      console.log(`Initiating ${provider} login...`);
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
@@ -62,6 +63,7 @@ const Login = () => {
       
       // The user will be redirected to the OAuth provider
       toast.success(`Redirecting to ${provider}...`);
+      console.log("OAuth flow initiated successfully");
     } catch (error: any) {
       setIsLoading(false);
       toast.error(`${provider} login failed. Please try again.`);
